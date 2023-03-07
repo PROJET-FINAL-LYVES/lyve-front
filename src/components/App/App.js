@@ -12,6 +12,7 @@ import AdminComponent from '../Admin/AdminComponent';
 import PlayerComponent from '../Player/PlayerComponent';
 import LandingComponent from '../Landing/LandingComponent';
 import ProtectedRoutes from '../Routes/ProtectedRoutes';
+import Navbar from '../Navigation/Navbar';
 
 import './App.css';
 
@@ -29,7 +30,8 @@ const App = () => {
   return (
     <>
       <Router>
-        <Navigation />
+        
+        <Navbar />
 
         {user ? (
           <button onClick={handleLogout}>Sign Out</button>
@@ -51,28 +53,15 @@ const App = () => {
               <ProtectedRoutes
                 isAllowed={user?.roles.includes('admin')}
                 redirectPath="/home">
-
                 <AdminComponent />
               </ProtectedRoutes>
             }
           />
+          <Route path="*" element={<p>There's nothing here: 404!</p>} />
         </Routes>
-        <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Router>
     </>
   );
 };
-
-const Navigation = () => (
-  <nav>
-    <ul>
-      <li><Link to="/home">Home</Link></li>
-      <li><Link to="/player">Player</Link></li>
-      <li><Link to="/login">Login</Link></li>
-      <li><Link to="/signup">Create account</Link></li>
-      <li><Link to="/admin">Admin (protected)</Link></li>
-    </ul>
-  </nav>
-);
 
 export default App;
