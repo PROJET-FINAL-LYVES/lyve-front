@@ -4,17 +4,14 @@ import {
   Routes,
   Route
 } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import HomeComponent from '../Home/HomeComponent.jsx';
-import LoginComponent from '../Login/LoginComponent';
-import SignupComponent from '../Signup/SignupComponent';
-import AdminComponent from '../Admin/AdminComponent';
-import PlayerComponent from '../Player/PlayerComponent';
-import LandingComponent from '../Landing/LandingComponent';
-import ProtectedRoutes from '../Routes/ProtectedRoutes';
-import Navbar from '../Navigation/Navbar';
-
-import './App.css';
+import HomeComponent from './pages/Home/index.js';
+import LoginComponent from './pages/Login';
+import SignupComponent from './pages/Signup';
+import AdminComponent from './pages/Admin';
+import PlayerComponent from './pages/Player/Player';
+import LandingComponent from './pages/Landing';
+import ProtectedRoutes from './routes/ProtectedRoutes';
+import Navbar from './components/Navbar/Navbar';
 
 const App = () => {
   const [user, setUser] = React.useState(null);

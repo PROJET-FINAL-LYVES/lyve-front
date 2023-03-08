@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const LandingComponent = () => {
+const Landing = () => {
   return (
     <div>
       <h1>Bienvenu sur Lyve 😀</h1>
@@ -13,5 +13,5 @@ const LandingComponent = () => {
   );
 };
 
-export default LandingComponent;
+export default Landing;
 
