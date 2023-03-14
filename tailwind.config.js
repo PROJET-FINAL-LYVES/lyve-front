@@ -24,6 +24,10 @@ module.exports = {
         'black': '#000000',
         'white': '#FFFFFF',
       },
+      fontSize: {
+        'xxs': '.625rem',
+      },
+
       spacing: {
         '128': '32rem',
         '144': '36rem',

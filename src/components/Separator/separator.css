@@ -1,6 +1,23 @@
 .separator {
   width: 100%;
+  position: relative;
+
+}
+.separator:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 45%;
   height: 1px;
-  background-color: red;
-  margin: 0 0 20px 0;
+  background-color: rgb(107 114 128);
+}
+.separator:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 45%;
+  height: 1px;
+  background-color: rgb(107 114 128);
 }
