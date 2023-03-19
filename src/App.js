@@ -9,6 +9,7 @@ import HomeComponent from './pages/Home/index.js';
 import LoginComponent from './pages/Login';
 import SignupComponent from './pages/Signup';
 import AdminComponent from './pages/Admin';
+import ForgotPasswordComponent from './pages/ForgotPassword';
 import PlayerComponent from './pages/Player/Player';
 import LandingComponent from './pages/Landing';
 import ProtectedRoutes from './routes/ProtectedRoutes';
@@ -42,6 +43,7 @@ const App = () => {
             </Route>
             <Route path="/login" element={<LoginComponent />} />
             <Route path="/signup" element={<SignupComponent />} />
+            <Route path="/forgot" element={<ForgotPasswordComponent />} />
             <Route
               path="/admin"
               element={

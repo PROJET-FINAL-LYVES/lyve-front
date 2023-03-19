@@ -5,7 +5,7 @@ const Signup = () => {
 
 
   return (
-    <div className="mx-auto w-300">
+    <div className="mx-auto w-1/2">
       <SignupForm />
     </div>
   );
