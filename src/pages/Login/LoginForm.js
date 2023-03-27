@@ -3,6 +3,7 @@ import Logo from "../../components/Logo/Logo";
 import SocialButtons from "../../components/Buttons/SocialButtons";
 import Separator from "../../components/Separator/Separator";
 import SimpleButton from "../../components/Buttons/SimpleButton";
+
 import axios from "axios";
 
 const LoginForm = () => {
@@ -73,7 +74,7 @@ const LoginForm = () => {
                 </div>
 
                 <p className="mt-10 text-xs">
-                    Vous n'avez pas de compte ? <br/> <a href="#" className="text-gold hover:text-gold transition-all underline underline-offset-2 ">Inscrivez-vous</a>
+                    Vous n'avez pas de compte ? <br/> <a href="/signup" className="text-gold hover:text-gold transition-all underline underline-offset-2 ">Inscrivez-vous</a>
                 </p>
 
             </form>

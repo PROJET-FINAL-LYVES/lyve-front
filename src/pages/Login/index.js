@@ -3,7 +3,7 @@ import LoginForm from "./LoginForm";
 
 const Login = () => {
   return (
-    <div className="mx-auto w-1/2">
+    <div className="mx-auto max-w-screen-xl">
       <LoginForm />
     </div>
   );

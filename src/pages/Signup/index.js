@@ -5,7 +5,7 @@ const Signup = () => {
 
 
   return (
-    <div className="mx-auto w-1/2">
+    <div className="mx-auto max-w-screen-md min-w-300 w-2/3">
       <SignupForm />
     </div>
   );
