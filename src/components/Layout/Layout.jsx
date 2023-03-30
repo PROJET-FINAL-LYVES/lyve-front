@@ -1,18 +1,19 @@
-import React from 'react';
+import React from "react";
+import Navbar from "./Navbar/Navbar";
+import Footer from "./Footer/Footer";
 
 const Layout = ({ children }) => {
-    return (
-        <>
+  return (
+    <div className="bg-darkgray">
+      <Navbar />
+      <main className="min-h-screen flex text-center align-center justify-start flex-col text-white font-primary ">
+        {children}
+      </main>
 
-            {/* <Navbar/> */}
-
-            <main className='min-h-screen py-32 flex text-center align-center justify-center flex-col bg-darkgray text-white font-primary'>
-                {children}
-            </main>
-
-            {/* <Footer /> */}
-        </>
-    );
-}
+      <Footer />
+    </div>
+  );
+};
 
 export default Layout;
+

@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 
 const Logo = () => {
     return (
-        <h1 className="logo font-title text-gold mb-3">
+        <span className="logo font-title text-gold">
             <Link className='font-bold text-5xl' to="/">LYVE</Link>
-        </h1>
+        </span>
 
     );
 }
