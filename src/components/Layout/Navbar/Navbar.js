@@ -10,7 +10,6 @@ const Navbar = () => {
     auth.logout();
   };
 
-  console.log(auth)
   return (
     <header>
       <nav className="bg-[#191919] bg-opacity-50 mx-auto p-4 flex text-center items-center justify-between font-primary font-light">
@@ -22,7 +21,7 @@ const Navbar = () => {
           {auth.currentUser ? (
             <>
               <Link to='/admin' className="text-white hover:text-gold transition-all">Administration</Link>
-              <button className="text-white hover:text-gold transition-all" onClick={handleLogout}>Deconnexion</button>
+              <Link to='/myaccount' className="text-white hover:text-gold transition-all">Mon Compte</Link>
             </>
           ) : (
             <>

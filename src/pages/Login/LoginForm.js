@@ -25,8 +25,7 @@ const LoginForm = () => {
         instance
             .post("/login", { mail: email, password: password })
             .then((response) => {
-                console.log(response);
-                auth.login(response.data.user); // Mettre à jour l'utilisateur connecté
+                auth.login(response.data.user);
             })
             .catch((error) => {
                 console.error(error);
