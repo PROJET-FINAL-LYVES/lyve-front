@@ -5,7 +5,6 @@ import {
   Route
 } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
-import HomeComponent from './pages/Home/index.js';
 import LoginComponent from './pages/Login';
 import SignupComponent from './pages/Signup';
 import AdminComponent from './pages/Admin';
@@ -16,32 +15,32 @@ import ProtectedRoutes from './routes/ProtectedRoutes';
 
 const App = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-  
+
 
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<LandingComponent />} />
-        <Route element={<ProtectedRoutes isAllowed={!!user} />}>
-          <Route path="/home" element={<HomeComponent />} />
-          <Route path="/player" element={<PlayerComponent />} />
-        </Route>
-        <Route path="/login" element={<LoginComponent />} />
-        <Route path="/signup" element={<SignupComponent />} />
-        <Route path="/forgot" element={<ForgotPasswordComponent />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoutes
-              isAllowed={user?.roles.includes('admin')}
-              redirectPath="/home">
-              <AdminComponent />
-            </ProtectedRoutes>
-          }
-        />
-        <Route path="*" element={<p>There's nothing here: 404!</p>} />
-      </Routes>
-    </Layout>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<LandingComponent />} />
+            <Route element={<ProtectedRoutes isAllowed={!!user} />}>
+              <Route path="/home" element={<LandingComponent />} />
+              <Route path="/player" element={<PlayerComponent />} />
+            </Route>
+            <Route path="/login" element={<LoginComponent />} />
+            <Route path="/signup" element={<SignupComponent />} />
+            <Route path="/forgot" element={<ForgotPasswordComponent />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoutes
+                  isAllowed={user?.roles.includes('admin')}
+                  redirectPath="/home">
+                  <AdminComponent />
+                </ProtectedRoutes>
+              }
+            />
+            <Route path="*" element={<p>There's nothing here: 404!</p>} />
+          </Routes>
+        </Layout>
   );
 };
 
