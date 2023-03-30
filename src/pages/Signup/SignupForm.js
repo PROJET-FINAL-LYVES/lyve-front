@@ -37,8 +37,8 @@ const SignupForm = () => {
                 password: password,
                 password_confirm: passwordConfirm,
             })
-            .then((response) => {
-                console.log('connecté');
+            .then((event) => {
+                console.error(event);
             })
             .catch((error) => {
                 console.error(error);

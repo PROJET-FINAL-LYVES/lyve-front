@@ -1,17 +1,13 @@
 import React from "react";
 import Logo from "../../Logo/Logo";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
+  const auth = useAuth();
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    auth.logout();
   };
 
   return (
@@ -21,17 +17,11 @@ const Navbar = () => {
           <Logo />
         </div>
 
-        {!isLoggedIn && (
-          <div className="header-center flex flex-grow justify-center flex-row align-middle gap-4 text-end ">
-            <button className="text-red-500 hover:text-gold transition-all" onClick={handleLogin}>Connexion auto</button>
-          </div>
-        )}
-
         <div className="header-right flex gap-4 ">
-          {isLoggedIn ? (
+          {auth.currentUser ? (
             <>
               <Link to='/admin' className="text-white hover:text-gold transition-all">Administration</Link>
-              <button className="text-white hover:text-gold transition-all" onClick={handleLogout}>Deconnexion</button>
+              <Link to='/myaccount' className="text-white hover:text-gold transition-all">Mon Compte</Link>
             </>
           ) : (
             <>
