@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
-  Route
+  Route,
+  useNavigate
 } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import LoginComponent from './pages/Login';
@@ -12,35 +13,41 @@ import ForgotPasswordComponent from './pages/ForgotPassword';
 import PlayerComponent from './pages/Player/Player';
 import LandingComponent from './pages/Landing';
 import ProtectedRoutes from './routes/ProtectedRoutes';
+import { useAuth } from './context/AuthContext';
 
 const App = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (currentUser && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {
+      navigate('/');
+    }
+  }, [currentUser, navigate]);
 
   return (
-        <Layout>
-          <Routes>
-            <Route path="/" element={<LandingComponent />} />
-            <Route element={<ProtectedRoutes isAllowed={!!user} />}>
-              <Route path="/home" element={<LandingComponent />} />
-              <Route path="/player" element={<PlayerComponent />} />
-            </Route>
-            <Route path="/login" element={<LoginComponent />} />
-            <Route path="/signup" element={<SignupComponent />} />
-            <Route path="/forgot" element={<ForgotPasswordComponent />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoutes
-                  isAllowed={user?.roles.includes('admin')}
-                  redirectPath="/home">
-                  <AdminComponent />
-                </ProtectedRoutes>
-              }
-            />
-            <Route path="*" element={<p>There's nothing here: 404!</p>} />
-          </Routes>
-        </Layout>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<LandingComponent />} />
+        <Route element={<ProtectedRoutes isAllowed={!!currentUser} />}>
+          <Route path="/home" element={<LandingComponent />} />
+          <Route path="/player" element={<PlayerComponent />} />
+        </Route>
+        <Route path="/login" element={<LoginComponent />} />
+        <Route path="/signup" element={<SignupComponent />} />
+        <Route path="/forgot" element={<ForgotPasswordComponent />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoutes
+              redirectPath="/home">
+              <AdminComponent />
+            </ProtectedRoutes>
+          }
+        />
+        <Route path="*" element={<p>There's nothing here: 404!</p>} />
+      </Routes>
+    </Layout>
   );
 };
 

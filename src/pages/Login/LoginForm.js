@@ -4,6 +4,11 @@ import SocialButtons from "../../components/Buttons/SocialButtons";
 import Separator from "../../components/Separator/Separator";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 
+import { Link } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
+
+
 import axios from "axios";
 
 const LoginForm = () => {
@@ -13,18 +18,20 @@ const LoginForm = () => {
 
     const instance = axios.create({ baseURL: 'http://localhost:3001' })
 
+    const auth = useAuth();
+
     const handleSubmit = (event) => {
         event.preventDefault();
         instance
             .post("/login", { mail: email, password: password })
             .then((response) => {
                 console.log(response);
+                auth.login(response.data.user); // Mettre à jour l'utilisateur connecté
             })
             .catch((error) => {
                 console.error(error);
             });
     };
-
     return (
 
         <div className="bg-black  p-7 w-auto mx-auto my-5 text-darkgray rounded-2xl">
@@ -83,7 +90,7 @@ const LoginForm = () => {
                 </div>
 
                 <p className="mt-10 text-xs">
-                    Vous n'avez pas de compte ? <br /> <a href="/signup" className="text-gold hover:text-gold transition-all underline underline-offset-2 ">Inscrivez-vous</a>
+                    Vous n'avez pas de compte ? <br /> <Link to="/signup" className="text-gold hover:text-gold transition-all underline underline-offset-2 ">Inscrivez-vous</Link>
                 </p>
             </form>
         </div>
