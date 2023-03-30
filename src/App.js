@@ -15,52 +15,33 @@ import LandingComponent from './pages/Landing';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 
 const App = () => {
-  const [user, setUser] = React.useState(null);
-
-  const handleLogin = () =>
-    setUser({
-      id: '1',
-      name: 'robin',
-      roles: ['admin'],
-    });
-  const handleLogout = () => setUser(null);
+  const user = JSON.parse(localStorage.getItem('user'));
+  
 
   return (
-    <>
-      <Layout>
-        <Router>
-          {user ? (
-            <button onClick={handleLogout}>Sign Out</button>
-          ) : (
-            <button onClick={handleLogin}>Sign In</button>
-          )}
-
-          <Routes>
-            <Route path="/" element={<LandingComponent />} />
-            <Route element={<ProtectedRoutes isAllowed={!!user} />}>
-              <Route path="/home" element={<HomeComponent />} />
-              <Route path="/player" element={<PlayerComponent />} />
-            </Route>
-            <Route path="/login" element={<LoginComponent />} />
-            <Route path="/signup" element={<SignupComponent />} />
-            <Route path="/forgot" element={<ForgotPasswordComponent />} />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoutes
-                  isAllowed={user?.roles.includes('admin')}
-                  redirectPath="/home">
-                  <AdminComponent />
-                </ProtectedRoutes>
-              }
-            />
-            <Route path="*" element={<p>There's nothing here: 404!</p>} />
-          </Routes>
-        </Router>
-
-
-      </Layout>
-    </>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<LandingComponent />} />
+        <Route element={<ProtectedRoutes isAllowed={!!user} />}>
+          <Route path="/home" element={<HomeComponent />} />
+          <Route path="/player" element={<PlayerComponent />} />
+        </Route>
+        <Route path="/login" element={<LoginComponent />} />
+        <Route path="/signup" element={<SignupComponent />} />
+        <Route path="/forgot" element={<ForgotPasswordComponent />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoutes
+              isAllowed={user?.roles.includes('admin')}
+              redirectPath="/home">
+              <AdminComponent />
+            </ProtectedRoutes>
+          }
+        />
+        <Route path="*" element={<p>There's nothing here: 404!</p>} />
+      </Routes>
+    </Layout>
   );
 };
 

@@ -3,8 +3,47 @@ import Logo from "../../components/Logo/Logo";
 import SocialButtons from "../../components/Buttons/SocialButtons";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import Separator from "../../components/Separator/Separator";
+import axios from "axios";
+import { useState } from "react";
 
 const SignupForm = () => {
+
+    const [email, setEmail] = useState("");
+    const [emailConfirm, setEmailConfirm] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [pseudo, setPseudo] = useState("");
+    const [birthday, setBirthday] = useState("");
+
+    const instance = axios.create({ baseURL: 'http://localhost:3001' })
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (email !== emailConfirm) {
+            console.error("Les adresses e-mail ne correspondent pas.");
+            return;
+        }
+
+        if (password !== passwordConfirm) {
+            console.error("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        instance
+            .post("/register", {
+                username: pseudo,
+                mail: email,
+                dob: birthday,
+                password: password,
+                password_confirm: passwordConfirm,
+            })
+            .then((response) => {
+                console.log('connecté');
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
 
@@ -18,54 +57,90 @@ const SignupForm = () => {
             <h2 className="text-white font-bold mb-5">
                 Ou inscrivez-vous avec votre adresse e-mail
             </h2>
-            <form className=" px-8 pt-6 pb-8 mb-4 text-white">
-
+            <form
+                className=" px-8 pt-6 pb-8 mb-4 text-white"
+                onSubmit={handleSubmit}
+            >
                 <div className="mb-8">
                     <label className="block text-left text-white text-xs font-bold mb-3" htmlFor="email" >
                         Quelle est votre adresse email ?
                     </label>
-                    <input className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="Saisissez votre adresse e-mail">
-                    </input>
+                    <input
+                        className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email"
+                        type="text"
+                        placeholder="Saisissez votre adresse e-mail"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="email-confirm" >
                         Confirmez votre adresse email
                     </label>
-                    <input className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline" id="email-confirm" type="text" placeholder="Confirmez votre adresse e-mail">
-                    </input>
+                    <input
+                        className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email-confirm"
+                        type="text"
+                        placeholder="Confirmez votre adresse e-mail"
+                        value={emailConfirm}
+                        onChange={(e) => setEmailConfirm(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="password" >
                         Quel est votre mot de passe ?
                     </label>
-                    <input className="bg-black p-4 border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Saisissez votre mot de passe">
-                    </input>
+                    <input
+                        className="bg-black p-4 border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password"
+                        type="password"
+                        placeholder="Saisissez votre mot de passe"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="password-confirm" >
                         Confirmez votre mot de passe
                     </label>
-                    <input className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password-confirm" type="password" placeholder="Confirmez votre mot de passe">
-                    </input>
+                    <input
+                        className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password-confirm"
+                        type="password"
+                        placeholder="Confirmez votre mot de passe"
+                        value={passwordConfirm}
+                        onChange={(e) => setPasswordConfirm(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="pseudo" >
                         Comment doit-on vous appeler ?
                     </label>
-                    <input className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline" id="pseudo" type="text" >
-                    </input>
+                    <input
+                        className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="pseudo"
+                        type="text"
+                        value={pseudo}
+                        onChange={(e) => setPseudo(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="birthday" >
                         Quelle est votre date de naissance ?
                     </label>
-                    <input className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline" id="birthday" type="date" >
-                    </input>
+                    <input
+                        className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        id="birthday"
+                        type="date"
+                        value={birthday}
+                        onChange={(e) => setBirthday(e.target.value)}
+                    />
                 </div>
 
                 <div className="mb-8 flex text-left items-center">

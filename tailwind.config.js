@@ -6,6 +6,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      padding: {
+        '1/2': '50%',
+        full: '100%',
+      },
       screens: {
         sm: '480px',
         md: '768px',
@@ -20,7 +24,9 @@ module.exports = {
       colors: {
         'gold': '#CBB26B',
         'lightgray': '#707070',
+        'custom-gray': '#2c2a2a',
         'darkgray': '#1E1E1E',
+        'darkestgray': '#0F0F0F',
         'black': '#000000',
         'white': '#FFFFFF',
       },
