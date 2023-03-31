@@ -13,7 +13,7 @@ export const LoadingProvider = ({ children }) => {
         isLoading,
         setIsLoading,
     };
-    
+
 
     return (
         <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>
