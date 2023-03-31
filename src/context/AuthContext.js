@@ -11,9 +11,8 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        //@todo Jwt token
         const storedUser = Cookies.get("user");
-        if (storedUser) {
+        if (storedUser && storedUser !== "undefined") {
             setCurrentUser(JSON.parse(storedUser));
         }
     }, []);

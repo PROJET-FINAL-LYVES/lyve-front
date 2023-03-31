@@ -1,15 +1,10 @@
 import React from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { useEffect } from 'react'
 import SimpleButton from "../../components/Buttons/SimpleButton"; 
 
 const MyAccount = () => {
 
     const auth = useAuth();
-    useEffect(() => {
-        console.log(auth)
-    }, [auth]);
-
 
     const handleLogout = () => {
         auth.logout();

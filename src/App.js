@@ -24,7 +24,6 @@ const App = () => {
     if (currentUser && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {
       navigate('/');
     }
-    console.log(currentUser)
   }, [currentUser, navigate]);
 
   return (

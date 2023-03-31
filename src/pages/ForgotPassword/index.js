@@ -21,6 +21,12 @@ const ForgotPassword = () => {
                 </input>
             </div>
         </form>
+
+        <SimpleButton
+            label='Envoyer'
+            type='submit'
+            rounded='rounded-full'
+        />
     </div>
 }
 
