@@ -6,10 +6,6 @@ import { useAuth } from "../../../context/AuthContext";
 const Navbar = () => {
   const auth = useAuth();
 
-  const handleLogout = () => {
-    auth.logout();
-  };
-
   return (
     <header>
       <nav className="bg-[#191919] bg-opacity-50 mx-auto p-4 flex text-center items-center justify-between font-primary font-light">

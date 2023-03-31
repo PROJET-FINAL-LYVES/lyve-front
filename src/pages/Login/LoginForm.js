@@ -4,14 +4,18 @@ import SocialButtons from "../../components/Buttons/SocialButtons";
 import Separator from "../../components/Separator/Separator";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 
+
 import { Link } from "react-router-dom";
 
+import { useLoading } from '../../context/LoadingContext';
 import { useAuth } from "../../context/AuthContext";
 
 
 import axios from "axios";
 
 const LoginForm = () => {
+
+    const { setIsLoading } = useLoading();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -23,6 +27,7 @@ const LoginForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setIsLoading(true); // Set isLoading to true when the form is submitted
         instance
             .post("/login", { mail: email, password: password })
             .then((response) => {
@@ -30,8 +35,12 @@ const LoginForm = () => {
             })
             .catch((error) => {
                 console.error(error);
+            })
+            .finally(() => {
+                setIsLoading(false); // Set isLoading back to false after the request is completed
             });
     };
+
     return (
 
         <div className="bg-black  p-7 w-auto mx-auto my-5 text-darkgray rounded-2xl">

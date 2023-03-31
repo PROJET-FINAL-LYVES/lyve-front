@@ -3,10 +3,15 @@ import Logo from "../../components/Logo/Logo";
 import SocialButtons from "../../components/Buttons/SocialButtons";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import Separator from "../../components/Separator/Separator";
-import axios from "axios";
+
 import { useState } from "react";
+import { useLoading } from '../../context/LoadingContext';
+
+import axios from "axios";
 
 const SignupForm = () => {
+
+    const { setIsLoading } = useLoading();
 
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
@@ -19,6 +24,7 @@ const SignupForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setIsLoading(true); // Set isLoading to true when the form is submitted
         if (email !== emailConfirm) {
             console.error("Les adresses e-mail ne correspondent pas.");
             return;
@@ -30,6 +36,7 @@ const SignupForm = () => {
         }
 
         instance
+
             .post("/register", {
                 username: pseudo,
                 mail: email,
@@ -42,6 +49,9 @@ const SignupForm = () => {
             })
             .catch((error) => {
                 console.error(error);
+            })
+            .finally(() => {
+                setIsLoading(false); // Set isLoading back to false after the request is completed
             });
     };
 

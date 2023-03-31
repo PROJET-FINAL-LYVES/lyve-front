@@ -1,16 +1,27 @@
 import React from 'react'
+import SimpleButton from "../../components/Buttons/SimpleButton";
+import Loader from '../../components/Loader/Loader'
+
 import { useAuth } from '../../context/AuthContext'
-import SimpleButton from "../../components/Buttons/SimpleButton"; 
+import { useLoading } from '../../context/LoadingContext'
+import { useEffect } from 'react'
 
 const MyAccount = () => {
 
     const auth = useAuth();
+    // const { isLoading, setIsLoading } = useLoading();
 
     const handleLogout = () => {
         auth.logout();
     };
 
-
+    // useEffect(() => {
+    //     setIsLoading(true);
+    //     setTimeout(() => {
+    //         setIsLoading(false);
+    //     }, 500);
+    // }, []);
+   
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0');
@@ -19,13 +30,14 @@ const MyAccount = () => {
 
         return `${day}-${month}-${year}`;
     };
-   
+
     return (
         <div className="bg-black p-7 w-auto mx-auto my-5 text-darkgray rounded-2xl">
             <h1 className="text-white text-2xl font-bold mb-12">
                 Mon compte
             </h1>
             <div className="text-white mb-6">
+                {/* {isLoading && <Loader/>} */}
                 <p>
                     <span className="font-bold">Nom d'utilisateur : </span>
                     {auth.currentUser.username}
@@ -40,8 +52,8 @@ const MyAccount = () => {
                 </p>
             </div>
             <SimpleButton
-              onClick={handleLogout}
-              label='Déconnexion'/>
+                onClick={handleLogout}
+                label='Déconnexion' />
         </div>
     )
 }
