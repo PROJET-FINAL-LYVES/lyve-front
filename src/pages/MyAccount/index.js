@@ -9,18 +9,10 @@ import { useEffect } from 'react'
 const MyAccount = () => {
 
     const auth = useAuth();
-    // const { isLoading, setIsLoading } = useLoading();
 
     const handleLogout = () => {
         auth.logout();
     };
-
-    // useEffect(() => {
-    //     setIsLoading(true);
-    //     setTimeout(() => {
-    //         setIsLoading(false);
-    //     }, 500);
-    // }, []);
    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
