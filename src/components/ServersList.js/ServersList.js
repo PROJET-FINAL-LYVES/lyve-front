@@ -1,5 +1,5 @@
 import React from 'react'
-import Server from './Server/Server'
+import ServerListItem from './ServerListItem/ServerListItem'
 
 const ServersList = () => {
     const servers = [
@@ -92,7 +92,7 @@ const ServersList = () => {
             <h2 className='font-bold text-2xl mb-12'>Rejoignez un serveur</h2>
             <div className='w-100 grid grid-cols-3 gap-16' >
                 {servers.map(server => (
-                    <Server
+                    <ServerListItem
                         key={server.id}
                         name={server.name}
                         description={server.description}

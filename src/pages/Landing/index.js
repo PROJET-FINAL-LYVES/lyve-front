@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import HeroBanner from "../../components/HeroBanner/HeroBanner";
 import ServersList from "../../components/ServersList.js/ServersList.js";
 import { useLoading } from "../../context/LoadingContext";

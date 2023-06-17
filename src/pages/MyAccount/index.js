@@ -1,10 +1,7 @@
 import React from 'react'
 import SimpleButton from "../../components/Buttons/SimpleButton";
-import Loader from '../../components/Loader/Loader'
 
 import { useAuth } from '../../context/AuthContext'
-import { useLoading } from '../../context/LoadingContext'
-import { useEffect } from 'react'
 
 const MyAccount = () => {
 

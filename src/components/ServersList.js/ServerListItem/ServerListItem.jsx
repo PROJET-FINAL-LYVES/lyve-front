@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Server = ({ name, description, imageUrl, listenersCount, nowPlaying }) => {
+const ServerListItem = ({ name, description, imageUrl, listenersCount, nowPlaying }) => {
 
     const randomColor = () => {
         return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -24,7 +24,7 @@ const Server = ({ name, description, imageUrl, listenersCount, nowPlaying }) => 
     );
 };
 
-Server.propTypes = {
+ServerListItem.propTypes = {
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     imageUrl: PropTypes.string.isRequired,
@@ -32,4 +32,4 @@ Server.propTypes = {
     nowPlaying: PropTypes.string.isRequired,
 };
 
-export default Server;
+export default ServerListItem;
