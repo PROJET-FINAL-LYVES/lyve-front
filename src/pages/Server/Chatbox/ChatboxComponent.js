@@ -1,59 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import socketIOClient from "socket.io-client";
+import React, { useEffect, useState } from "react";
 
-const ENDPOINT = "http://127.0.0.1:3001";  // Change this to your server's URL
+import socket from '../../../socket';
 
-const ChatBoxComponent = () => {
-  const [message, setMessage] = useState('');
+function Chatbox({ roomId }) {
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
+  const [input, setInput] = useState("");
 
-  // Connect to the server when the component mounts
   useEffect(() => {
-    const newSocket = socketIOClient(ENDPOINT);
-    setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      console.log("Connected");
-    });
+    socket.emit('join room', roomId);
 
-    newSocket.on('chat message', msg => {
+    socket.on('chat message', msg => {
       setMessages(messages => [...messages, msg]);
     });
-
-    // Disconnect the socket when the component unmounts
     return () => {
-      newSocket.disconnect();
+      socket.off('chat message');
     };
   }, []);
 
   const sendMessage = e => {
     e.preventDefault();
-
-    // Send the message to the server
-    if (socket) {
-      socket.emit('chat message', message);
-    }
-
-    // Clear the input field
-    setMessage('');
+    socket.emit('chat message', roomId, input);
+    setInput("");
   };
 
   return (
     <div>
-      {messages.map((msg, index) => (
-        <div key={index}>{msg}</div>
+      {messages.map((message, i) => (
+        <p key={i}>{message}</p>
       ))}
       <form onSubmit={sendMessage}>
         <input
-          type="text"
-          value={message}
-          onChange={e => setMessage(e.target.value)}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          placeholder="Type a message"
         />
         <button type="submit">Send</button>
       </form>
     </div>
   );
-};
+}
 
-export default ChatBoxComponent;
+export default Chatbox;
