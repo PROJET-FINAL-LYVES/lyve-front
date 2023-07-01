@@ -8,25 +8,32 @@ function YouTubePlayer({ roomId, url }) {
     const playerRef = useRef();
 
     const playVideo = () => {
-        console.log('play')
-        socket.emit('video action', roomId, { type: 'play' });
+        const currentTime = playerRef.current.getCurrentTime();
+        console.log('Play Video: ', currentTime);
+        socket.emit('video action', roomId, { type: 'play', time: currentTime });
     };
 
     const pauseVideo = () => {
-        socket.emit('video action', roomId, { type: 'pause' });
+        const currentTime = playerRef.current.getCurrentTime();
+        console.log('Pause Video: ', currentTime);
+        socket.emit('video action', roomId, { type: 'pause', time: currentTime });
     };
 
+
+
     useEffect(() => {
-        socket.on('video action', (action) => {
+        socket.on('video action', (action, time) => {
+            console.log('Received video action: ', action, time);
             if (action.type === 'play') {
-                console.log('play')
+                playerRef.current.seekTo(time, 'seconds');
                 playerRef.current.getInternalPlayer().playVideo();
             } else if (action.type === 'pause') {
-                console.log('pause')
+                playerRef.current.seekTo(time, 'seconds');
                 playerRef.current.getInternalPlayer().pauseVideo();
             }
         });
     }, []);
+
 
     return (
         <ReactPlayer
@@ -38,6 +45,7 @@ function YouTubePlayer({ roomId, url }) {
         />
     );
 }
+
 
 
 
