@@ -1,26 +1,32 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
-
-import { useEffect } from "react";
 import socket from '../../../socket';
 
-function YouTubePlayer({ roomId, url }) {
-    
+function YouTubePlayer({ roomId, url, isHost }) {
+
     const playerRef = useRef();
 
+    useEffect(() => {
+        if (isHost) {
+            alert('You are now the host');
+        }
+    }, [isHost]);
+
     const playVideo = () => {
-        const currentTime = playerRef.current.getCurrentTime();
-        console.log('Play Video: ', currentTime);
-        socket.emit('video action', roomId, { type: 'play', time: currentTime });
+        if (isHost) {
+            const currentTime = playerRef.current.getCurrentTime();
+            console.log('Play Video: ', currentTime);
+            socket.emit('video action', roomId, { type: 'play', time: currentTime });
+        }
     };
 
     const pauseVideo = () => {
-        const currentTime = playerRef.current.getCurrentTime();
-        console.log('Pause Video: ', currentTime);
-        socket.emit('video action', roomId, { type: 'pause', time: currentTime });
+        if (isHost) {
+            const currentTime = playerRef.current.getCurrentTime();
+            console.log('Pause Video: ', currentTime);
+            socket.emit('video action', roomId, { type: 'pause', time: currentTime });
+        }
     };
-
-
 
     useEffect(() => {
         socket.on('video action', (action, time) => {
@@ -35,19 +41,15 @@ function YouTubePlayer({ roomId, url }) {
         });
     }, []);
 
-
     return (
         <ReactPlayer
             ref={playerRef}
             url={url}
-            controls={true}
+            controls={isHost}
             onPlay={playVideo}
             onPause={pauseVideo}
         />
     );
 }
-
-
-
 
 export default YouTubePlayer;

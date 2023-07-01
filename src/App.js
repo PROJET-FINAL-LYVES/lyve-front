@@ -14,7 +14,7 @@ import LoginComponent from './pages/Login';
 import SignupComponent from './pages/Signup';
 import AdminComponent from './pages/Admin';
 import ForgotPasswordComponent from './pages/ForgotPassword';
-import ServerComponent from './pages/Server';
+import ServerComponent from './pages/Room';
 import LandingComponent from './pages/Landing';
 import MyAccountComponent from './pages/MyAccount';
 import ProtectedRoutes from './routes/ProtectedRoutes';
