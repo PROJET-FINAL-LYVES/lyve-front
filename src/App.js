@@ -39,7 +39,7 @@ const App = () => {
           <Route element={<ProtectedRoutes isAllowed={currentUser} />}>
             <Route path="/myaccount" element={<MyAccountComponent />} />
           </Route>
-          <Route path="/server/1" element={<ServerComponent />} /> {/* Notez le :serverId ici */}
+          <Route path="/server/:id" element={<ServerComponent />} />
           <Route element={<ProtectedRoutes isAllowed={currentUser && currentUser.role === 'admin'} />}>
             <Route path="/admin" element={<AdminComponent />} />
           </Route>

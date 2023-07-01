@@ -7,9 +7,6 @@ function Chatbox({ roomId }) {
   const [input, setInput] = useState("");
 
   useEffect(() => {
-
-    socket.emit('join room', roomId);
-
     socket.on('chat message', msg => {
       setMessages(messages => [...messages, msg]);
     });

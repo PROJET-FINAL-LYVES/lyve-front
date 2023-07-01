@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import socket from '../../../socket';
 
 function YouTubePlayer({ roomId, url }) {
+    
     const playerRef = useRef();
 
     const playVideo = () => {

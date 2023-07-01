@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Chatbox from './Chatbox/ChatboxComponent';
 import YoutubePlayer from './YoutubePlayer/YoutubePlayerComponent';
 
 import { useParams } from 'react-router-dom';
+import socket from '../../socket';
 
+function Room() {
+    const { id: roomId } = useParams();
 
-function Room({roomId = 1 }) {
+    useEffect(() => {
+        socket.emit('join room', roomId);
+    }, [roomId]);
+
+    // Utilisez le hook useParams pour obtenir l'ID de la room à partir de l'URL
+
     return (
         <div>
             <Chatbox roomId={roomId} />
@@ -15,4 +23,4 @@ function Room({roomId = 1 }) {
     );
 }
 
-export default Room;
+export default Room
