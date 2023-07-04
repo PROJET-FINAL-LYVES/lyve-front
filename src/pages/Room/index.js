@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Chatbox from './Chatbox/ChatboxComponent';
 import Player from './Player/PlayerComponent';
+import Playlist from './Playlist/PlaylistComponent';
 import { useParams } from 'react-router-dom';
 import socket from '../../socket';
 
@@ -48,6 +49,7 @@ function Room() {
 
             <Chatbox roomId={roomId} isHost={isHost} />
             <Player roomId={roomId} isHost={isHost} url={currentVideo} />
+            <Playlist roomId={roomId} isHost={isHost} />
             <form onSubmit={handleVideoSubmit}>
                 <input type="url" value={videoUrl} onChange={handleVideoUrlChange} required />
                 <button type="submit">Ajouter une vidéo à la playlist</button>
