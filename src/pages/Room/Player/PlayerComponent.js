@@ -1,16 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
+import PropTypes from 'prop-types';
 import ReactPlayer from "react-player";
+import useSocket from '../../../hooks/useSocket';
 import socket from '../../../socket';
 
 function Player({ roomId, url, isHost }) {
-
     const playerRef = useRef();
 
-    useEffect(() => {
-        if (isHost) {
-            alert('You are now the host');
-        }
-    }, [isHost]);
+    useSocket(roomId, isHost, playerRef);
 
     const playVideo = () => {
         if (isHost) {
@@ -28,31 +25,24 @@ function Player({ roomId, url, isHost }) {
         }
     };
 
-    useEffect(() => {
-        socket.on('video action', (action, time) => {
-            console.log('Received video action: ', action, time);
-            if (action.type === 'play') {
-                playerRef.current.seekTo(time, 'seconds');
-                playerRef.current.getInternalPlayer().playVideo();
-            } else if (action.type === 'pause') {
-                playerRef.current.seekTo(time, 'seconds');
-                playerRef.current.getInternalPlayer().pauseVideo();
-            }
-        });
-    }, []);
-
     return (
         <ReactPlayer
             ref={playerRef}
             url={url}
             controls={true}
-            style={{pointerEvents : isHost ? 'auto' : 'none'}}
-            disablekb = {isHost ? false : true}
+            style={{ pointerEvents: isHost ? 'auto' : 'none' }}
+            disablekb={isHost ? false : true}
             autoplay={true}
             onPlay={playVideo}
             onPause={pauseVideo}
         />
     );
+}
+
+Player.propTypes = {
+    roomId: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    isHost: PropTypes.bool.isRequired,
 }
 
 export default Player;
