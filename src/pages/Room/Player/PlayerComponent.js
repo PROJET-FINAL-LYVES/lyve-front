@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import ReactPlayer from "react-player";
 import useSocket from '../../../hooks/useSocket';
@@ -6,15 +6,20 @@ import socket from '../../../socket';
 
 function Player({ roomId, url, isHost }) {
     const playerRef = useRef();
+    const [currentVideo, setCurrentVideo] = useState(url);
+    const [playing, setPlaying] = useState(false);
 
     useSocket(roomId, isHost, playerRef);
 
+    useEffect(() => {
+        // Lorsqu'une nouvelle vidéo est définie, la lecture commence automatiquement
+        setPlaying(true);
+    }, [currentVideo]);
+
     const playVideo = () => {
-        if (isHost) {
-            const currentTime = playerRef.current.getCurrentTime();
-            console.log('Play Video: ', currentTime);
-            socket.emit('video action', roomId, { type: 'play', time: currentTime });
-        }
+        const currentTime = playerRef.current.getCurrentTime();
+        console.log('Play Video: ', currentTime);
+        socket.emit('video action', roomId, { type: 'play', time: currentTime });
     };
 
     const pauseVideo = () => {
@@ -25,16 +30,26 @@ function Player({ roomId, url, isHost }) {
         }
     };
 
+    socket.on('play video', (videoUrl) => {
+        setCurrentVideo(videoUrl);
+    });
+
+    const onEnd = () => {
+        console.log('Video ended');
+        socket.emit('next video', roomId);
+    };
+
     return (
         <ReactPlayer
             ref={playerRef}
-            url={url}
+            url={currentVideo}
             controls={true}
             style={{ pointerEvents: isHost ? 'auto' : 'none' }}
-            disablekb={isHost ? false : true}
-            autoplay={true}
+            config={{ youtube: { playerVars: { disablekb: isHost ? 0 : 1 } } }}
+            playing={playing}
             onPlay={playVideo}
             onPause={pauseVideo}
+            onEnded={onEnd}
         />
     );
 }

@@ -7,11 +7,29 @@ import socket from '../../socket';
 function Room() {
     const { id: roomId } = useParams();
     const [isHost, setIsHost] = useState(false);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [currentVideo, setCurrentVideo] = useState('');
+
+
+    const handleVideoUrlChange = (event) => {
+        setVideoUrl(event.target.value);
+    };
+
+    const handleVideoSubmit = (event) => {
+        event.preventDefault();
+        socket.emit('add video', roomId, videoUrl);
+        setVideoUrl('');
+    };
+
 
     useEffect(() => {
         socket.emit('join room', roomId);
         socket.on('host status', (status) => {
             setIsHost(status);
+        });
+
+        socket.on('play video', (videoUrl) => {
+            setCurrentVideo(videoUrl);
         });
     }, [roomId]);
 
@@ -23,8 +41,17 @@ function Room() {
 
     return (
         <div>
+            <div className='bg-red-500'>
+                <div className="room-id">Room ID: {roomId}</div>
+                <div className="host-status">Host: {isHost ? 'Yes' : 'No'}</div>
+            </div>
+
             <Chatbox roomId={roomId} isHost={isHost} />
-            <Player roomId={roomId} isHost={isHost} url="https://soundcloud.com/samstr/holy-key?si=bdf80baacf8040b58a42a3de0ed7f4f8&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" />
+            <Player roomId={roomId} isHost={isHost} url={currentVideo} />
+            <form onSubmit={handleVideoSubmit}>
+                <input type="url" value={videoUrl} onChange={handleVideoUrlChange} required />
+                <button type="submit">Ajouter une vidéo à la playlist</button>
+            </form>
         </div>
     );
 }

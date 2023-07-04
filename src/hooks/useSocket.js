@@ -2,12 +2,7 @@ import { useEffect } from "react";
 import socket from '../socket';
 
 const useSocket = (roomId, isHost, playerRef) => {
-    useEffect(() => {
-        if (isHost) {
-            alert('You are now the host');
-        }
-    }, [isHost]);
-
+    // eslint-disable-next-line
     useEffect(() => {
         socket.on('video action', (action, time) => {
             console.log('Received video action: ', action, time);
