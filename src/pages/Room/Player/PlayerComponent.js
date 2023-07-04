@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import ReactPlayer from "react-player";
 import socket from '../../../socket';
 
-function YouTubePlayer({ roomId, url, isHost }) {
+function Player({ roomId, url, isHost }) {
 
     const playerRef = useRef();
 
@@ -45,11 +45,14 @@ function YouTubePlayer({ roomId, url, isHost }) {
         <ReactPlayer
             ref={playerRef}
             url={url}
-            controls={isHost}
+            controls={true}
+            style={{pointerEvents : isHost ? 'auto' : 'none'}}
+            disablekb = {isHost ? false : true}
+            autoplay={true}
             onPlay={playVideo}
             onPause={pauseVideo}
         />
     );
 }
 
-export default YouTubePlayer;
+export default Player;
