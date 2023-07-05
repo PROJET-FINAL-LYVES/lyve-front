@@ -1,6 +1,6 @@
 import React from "react";
 import HeroBanner from "../../components/HeroBanner/HeroBanner";
-import ServersList from "../../components/ServersList.js/ServersList.js";
+import RoomsList from "../../components/Rooms/RoomsList.js";
 import { useLoading } from "../../context/LoadingContext";
 import Loader from "../../components/Loader/Loader";
 
@@ -14,7 +14,7 @@ const Landing = () => {
       ) : (
         <>
           <HeroBanner />
-          <ServersList />
+          <RoomsList />
         </>
       )}
     </div>

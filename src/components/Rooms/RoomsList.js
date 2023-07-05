@@ -1,8 +1,8 @@
 import React from 'react'
-import ServerListItem from './ServerListItem/ServerListItem'
+import RoomsListItem from './RoomsListItem/RoomsListItem'
 
-const ServersList = () => {
-    const servers = [
+const RoomsList = () => {
+    const rooms = [
         {
             id: 1,
             name: 'Server 1',
@@ -91,14 +91,14 @@ const ServersList = () => {
         <section className='servers-list max-w-screen-lg mx-auto p-4 mt-20'>
             <h2 className='font-bold text-2xl mb-12'>Rejoignez un serveur</h2>
             <div className='w-100 grid grid-cols-3 gap-16' >
-                {servers.map(server => (
-                    <ServerListItem
-                        key={server.id}
-                        name={server.name}
-                        description={server.description}
-                        imageUrl={server.imageUrl}
-                        listenersCount={server.listenersCount}
-                        nowPlaying={server.nowPlaying}
+                {rooms.map(room => (
+                    <RoomsListItem
+                        key={room.id}
+                        name={room.name}
+                        description={room.description}
+                        imageUrl={room.imageUrl}
+                        listenersCount={room.listenersCount}
+                        nowPlaying={room.nowPlaying}
                     />
                 ))}
             </div>
@@ -106,4 +106,4 @@ const ServersList = () => {
     )
 }
 
-export default ServersList
+export default RoomsList

@@ -5,7 +5,7 @@ import Playlist from './Playlist/PlaylistComponent';
 import { useParams } from 'react-router-dom';
 import socket from '../../socket';
 
-function Room() {
+const Room = () => {
     const { id: roomId } = useParams();
     const [isHost, setIsHost] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
