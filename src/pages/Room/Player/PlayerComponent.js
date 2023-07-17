@@ -67,13 +67,16 @@ function Player({ roomId, url, isHost }) {
     };
 
     return (
-        <div className="player rounded-2xl bg-opacity-50 bg-gradient-to-t from-fadestart to-fadeend">
+        <div className="player rounded-2xl mb-4 bg-opacity-50 bg-gradient-to-t from-fadestart to-fadeend">
             <div className="player_wrapper p-8">
                 <ReactPlayer
                     ref={playerRef}
                     url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
                     controls={true}
-                    style={{ pointerEvents: isHost ? 'auto' : 'none' }}
+                    style={{ 
+                        pointerEvents: isHost ? 'auto' : 'none',
+                        width: '100px',                    
+                    }}
                     config={{ youtube: { playerVars: { disablekb: isHost ? 0 : 1 } } }}
                     playing={playing}
                     onPlay={playVideo}

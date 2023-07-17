@@ -31,7 +31,7 @@ function Chatbox({ roomId }) {
   };
 
   return (
-    <section className="chatbox-wrapper w-96 max-w-96 py-4 px-8 h-full flex flex-col content-between bg-black">
+    <section className="chatbox-wrapper max-w-96 py-4 px-8 h-full flex flex-col content-between bg-black">
       <h2 className="py-4">Chatbox</h2>
       <span id="chat-feed" className="chatbox-content w-100 h-full flex-col-reverse text-start overflow-auto flex-wrap break-words">
         {messages.map((message, i) => (
