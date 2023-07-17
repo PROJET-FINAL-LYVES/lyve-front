@@ -8,7 +8,6 @@ import {
 import { useAuth } from './context/AuthContext';
 import { LoadingProvider, useLoading } from './context/LoadingContext';
 
-
 import Layout from './components/Layout/Layout';
 import LoginComponent from './pages/Login';
 import SignupComponent from './pages/Signup';

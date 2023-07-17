@@ -3,7 +3,7 @@ import SimpleButton from "../Buttons/SimpleButton";
 
 const HeroBanner = () => {
     return (
-        <div className="hero-banner w-100 p-12 pb-4 bg-[#191919] ro unded-lg flex ">
+        <div className="hero-banner h-{menu} w-100 p-12 pb-4 bg-[#191919] ro unded-lg flex ">
             <div className='hero-banner-left  w-1/2'>
                 <img src="/assets/banner_photo.png" alt="logo" className='' />
             </div>

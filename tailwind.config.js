@@ -29,11 +29,16 @@ module.exports = {
         'darkestgray': '#0F0F0F',
         'black': '#000000',
         'white': '#FFFFFF',
+        'fadestart':'#545454',
+        'fadeend': '#3C382C'
       },
       fontSize: {
         'xxs': '.625rem',
       },
-
+      height: {
+        'menu' : '80px',
+        'app': 'calc(100vh - 80px)',
+      },
       spacing: {
         '128': '32rem',
         '144': '36rem',

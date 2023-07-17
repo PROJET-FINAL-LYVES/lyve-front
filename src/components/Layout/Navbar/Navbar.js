@@ -8,7 +8,7 @@ const Navbar = () => {
 
   return (
     <header>
-      <nav className="bg-[#191919] bg-opacity-50 mx-auto p-4 flex text-center items-center justify-between font-primary font-light">
+      <nav className="bg-darkestgray h-{menu} bg-opacity-50 mx-auto p-4 flex text-center items-center justify-between font-primary font-light">
         <div className="header-left">
           <Logo />
         </div>
