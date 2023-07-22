@@ -4,7 +4,7 @@ import ReactPlayer from "react-player";
 import useSocket from '../../../hooks/useSocket';
 import socket from '../../../socket';
 
-function Player({ roomId, url, isHost }) {
+function Player({ roomId, url, isHost, playlist }) {
     const playerRef = useRef();
     const [currentVideo, setCurrentVideo] = useState(url);
     const [playing, setPlaying] = useState(false);
@@ -15,11 +15,26 @@ function Player({ roomId, url, isHost }) {
     useSocket(roomId, isHost, playerRef);
 
     useEffect(() => {
-        socket.on('set current time', (currentTime) => {
-            // Met à jour le temps de la vidéo avec le temps courant envoyé par l'hôte.
-            playerRef.current.seekTo(currentTime);
-        });
+        const handleGetCurrentTime = (newUserId) => {
+            const currentTime = playerRef.current.getCurrentTime();
+            socket.emit('send current time', newUserId, currentTime);
+        };
+
+        socket.on('get current time', handleGetCurrentTime);
+
+        return () => {
+            socket.off('get current time', handleGetCurrentTime);
+        };
     }, []);
+
+    useEffect(() => {
+        // if the playlist was empty and now a new video is added, start playing
+        if (playlist.length === 1 && currentVideo !== playlist[0]) {
+            setCurrentVideo(playlist[0]);
+            setPlaying(true);
+        }
+    }, [playlist]);
+
     // Lorsque l'hôte reçoit une demande pour obtenir le temps courant de la vidéo, 
     // il obtient ce temps et l'envoie au nouvel utilisateur.
     socket.on('get current time', (newUserId) => {
@@ -35,6 +50,7 @@ function Player({ roomId, url, isHost }) {
     }, [currentVideo]);
 
     const playVideo = () => {
+        
         const currentTime = playerRef.current.getCurrentTime();
         socket.emit('video action', roomId, { type: 'play', time: currentTime });
     };
@@ -47,6 +63,7 @@ function Player({ roomId, url, isHost }) {
     };
 
     const onEnd = () => {
+        console.log('Video ended');
         socket.emit('next video', roomId);
     };
 
@@ -71,7 +88,7 @@ function Player({ roomId, url, isHost }) {
             <div className="player_wrapper p-8">
                 <ReactPlayer
                     ref={playerRef}
-                    url='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                    url={currentVideo}
                     controls={true}
                     style={{ 
                         pointerEvents: isHost ? 'auto' : 'none',
@@ -86,12 +103,12 @@ function Player({ roomId, url, isHost }) {
                     onDuration={onDuration}
                 />
             </div>
-            {/* <div>
+            <div>
                 <div style={{ background: 'grey', height: '10px', width: '100%', position: 'relative' }}>
                     <div style={{ background: 'gold', height: '100%', width: `${(played / duration) * 100}%` }} />
                 </div>
                 <div>{`${formatTime(played)} / ${formatTime(duration)}`}</div>
-            </div> */}
+            </div>
         </div>
     );
 }

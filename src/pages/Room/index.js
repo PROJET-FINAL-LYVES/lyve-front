@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Chatbox from './Chatbox/ChatboxComponent';
 import Player from './Player/PlayerComponent';
 import Playlist from './Playlist/PlaylistComponent';
@@ -11,6 +11,7 @@ const Room = () => {
     const [isHost, setIsHost] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
     const [currentVideo, setCurrentVideo] = useState('');
+    const [playlist, setPlaylist] = useState([]);
 
 
     const handleVideoUrlChange = (event) => {
@@ -23,7 +24,6 @@ const Room = () => {
         setVideoUrl('');
     };
 
-
     useEffect(() => {
         socket.emit('join room', roomId);
         socket.on('host status', (status) => {
@@ -32,6 +32,10 @@ const Room = () => {
 
         socket.on('play video', (videoUrl) => {
             setCurrentVideo(videoUrl);
+        });
+        socket.on('update playlist', (newPlaylist) => {
+            setPlaylist(newPlaylist);
+            console.log('Playlist updated: ', newPlaylist);
         });
     }, [roomId]);
 
@@ -43,27 +47,19 @@ const Room = () => {
 
     return (
         <div className='room h-app flex'>
-            {/* <div className='bg-red-500'>
-                <div className="room-id">Room ID: {roomId}</div>
-                <div className="host-status">Host: {isHost ? 'Yes' : 'No'}</div>
-            </div> */}
             <div className='h-full basis-1/5 flex-shrink min-w-[25%] '>
                 <Chatbox roomId={roomId} isHost={isHost} />
             </div>
             <div className='h-full basis-3/5 max-w-5xl py-4 pl-4 flex flex-col'>
-
                 <div className='flex justify-between items-center mb-4'>
                     <h2 className='text-2xl font-bold'>Room ID: {roomId}</h2>
                     <div className='flex items-center'>
                         <div className=' text-gold mr-4'>{isHost ? "Vous êtes l'hôte de ce salon" : "Vous n'êtes pas l'hôte de ce salon"}</div>
                     </div>
                 </div>
-
-                <Player roomId={roomId} isHost={isHost} url={currentVideo} />
-
-                {/* todo */}
+                <Player roomId={roomId} isHost={isHost} url={currentVideo} playlist={playlist} />
                 <div className='rounded-2xl  p-8 bg-lightgray'>
-                    <Playlist roomId={roomId} isHost={isHost} />
+                    <Playlist roomId={roomId} isHost={isHost} playlist={playlist} />
                     <div>
                         <form onSubmit={handleVideoSubmit} className='playlist-form flex flex-col'>
                             <input className="bg-black p-4 w-2/4 mx-auto border-gold border rounded-0 text-lightgray font-bold text-sm rounded  py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -72,16 +68,13 @@ const Room = () => {
                         </form>
                     </div>
                 </div>
-
-
             </div>
             <div className='rounded-2xl w-full min-w-[10%] basis-1/5  m-4 p-8 bg-lightgray'>
-                <Listeners roomId={roomId} />
+                {/* Pass socket as a prop to the Listeners component */}
+                <Listeners roomId={roomId} socket={socket} />
             </div>
-
-
         </div>
     );
 }
 
-export default Room
+export default Room;
