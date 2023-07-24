@@ -13,6 +13,9 @@ const Room = () => {
     const [currentVideo, setCurrentVideo] = useState('');
     const [playlist, setPlaylist] = useState([]);
 
+    const handleClearPlaylist = () => {
+        socket.emit('clear playlist', roomId);
+    };
 
     const handleVideoUrlChange = (event) => {
         setVideoUrl(event.target.value);
@@ -30,14 +33,36 @@ const Room = () => {
             setIsHost(status);
         });
 
-        socket.on('play video', (videoUrl) => {
+        socket.emit('get video url', roomId);
+
+        socket.on('set video url', (videoUrl) => {
             setCurrentVideo(videoUrl);
         });
         socket.on('update playlist', (newPlaylist) => {
             setPlaylist(newPlaylist);
-            console.log('Playlist updated: ', newPlaylist);
         });
-    }, [roomId]);
+        return () => {
+            socket.off('host status');
+            socket.off('set video url');
+            socket.off('update playlist');
+        };
+    }, [roomId, socket]);
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleSetVideoUrl = (videoUrl) => {
+            setCurrentVideo(videoUrl);
+        };
+
+        socket.on('set video url', handleSetVideoUrl);
+
+        return () => {
+            socket.off('set video url', handleSetVideoUrl);
+        };
+    }, [socket, roomId]);  // Add roomId as a dependency
+
+
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -46,8 +71,8 @@ const Room = () => {
     }, []);
 
     return (
-        <div className='room h-app flex'>
-            <div className='h-full basis-1/5 flex-shrink min-w-[25%] '>
+        <div className='room flex'>
+            <div className='basis-1/5 flex-shrink min-w-[25%] '>
                 <Chatbox roomId={roomId} isHost={isHost} />
             </div>
             <div className='h-full basis-3/5 max-w-5xl py-4 pl-4 flex flex-col'>
@@ -57,16 +82,19 @@ const Room = () => {
                         <div className=' text-gold mr-4'>{isHost ? "Vous êtes l'hôte de ce salon" : "Vous n'êtes pas l'hôte de ce salon"}</div>
                     </div>
                 </div>
-                <Player roomId={roomId} isHost={isHost} url={currentVideo} playlist={playlist} />
+
+                <Player roomId={roomId} isHost={isHost} url={currentVideo} />
+
                 <div className='rounded-2xl  p-8 bg-lightgray'>
-                    <Playlist roomId={roomId} isHost={isHost} playlist={playlist} />
-                    <div>
-                        <form onSubmit={handleVideoSubmit} className='playlist-form flex flex-col'>
-                            <input className="bg-black p-4 w-2/4 mx-auto border-gold border rounded-0 text-lightgray font-bold text-sm rounded  py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                type="url" value={videoUrl} onChange={handleVideoUrlChange} required />
-                            <button type="submit">Ajouter</button>
-                        </form>
-                    </div>
+                    <Playlist
+                        roomId={roomId}
+                        isHost={isHost}
+                        playlist={playlist}
+                        videoUrl={videoUrl}
+                        handleVideoUrlChange={handleVideoUrlChange}
+                        handleVideoSubmit={handleVideoSubmit}
+                        handleClearPlaylist={handleClearPlaylist}
+                    />
                 </div>
             </div>
             <div className='rounded-2xl w-full min-w-[10%] basis-1/5  m-4 p-8 bg-lightgray'>

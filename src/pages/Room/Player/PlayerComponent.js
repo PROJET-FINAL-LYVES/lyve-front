@@ -1,58 +1,130 @@
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import ReactPlayer from "react-player";
-import useSocket from '../../../hooks/useSocket';
 import socket from '../../../socket';
 
-function Player({ roomId, url, isHost, playlist }) {
+function Player({ roomId, isHost, url }) {
     const playerRef = useRef();
     const [currentVideo, setCurrentVideo] = useState(url);
     const [playing, setPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [played, setPlayed] = useState(0);
-    const [title, setTitle] = useState('');
+    const [playerReady, setPlayerReady] = useState(false);
 
-    useSocket(roomId, isHost, playerRef);
 
     useEffect(() => {
-        const handleGetCurrentTime = (newUserId) => {
-            const currentTime = playerRef.current.getCurrentTime();
-            socket.emit('send current time', newUserId, currentTime);
+        const handleClientVideoAction = (action, time) => {
+            console.log('Received video action: ', action, time);
+            if (playerRef.current && playerRef.current.getInternalPlayer()) {
+                if (action.type === 'play') {
+                    playerRef.current.seekTo(time, 'seconds');
+                    playerRef.current.getInternalPlayer().playVideo();
+                } else if (action.type === 'pause') {
+                    playerRef.current.seekTo(time, 'seconds');
+                    playerRef.current.getInternalPlayer().pauseVideo();
+                }
+            } else {
+                console.log('No player found')
+            }
         };
 
-        socket.on('get current time', handleGetCurrentTime);
+        socket.on('client video action', handleClientVideoAction);
 
         return () => {
-            socket.off('get current time', handleGetCurrentTime);
+            // Cleanup function to remove the event listener when the component unmounts
+            socket.off('client video action', handleClientVideoAction);
         };
     }, []);
 
+
+
     useEffect(() => {
-        // if the playlist was empty and now a new video is added, start playing
-        if (playlist.length === 1 && currentVideo !== playlist[0]) {
-            setCurrentVideo(playlist[0]);
-            setPlaying(true);
+        if (!socket) return;
+
+        const handleGetCurrentState = (newUserId) => {
+            console.log('Sending current state to [' + newUserId + ']')
+            if (playerRef.current) {
+                const currentTime = playerRef.current.getCurrentTime();
+                let internalPlayer = playerRef.current.getInternalPlayer();
+
+                if (internalPlayer && typeof internalPlayer.getPlayerState === 'function') {
+                    let playerState = internalPlayer.getPlayerState();
+
+                    if (playerState === 1) {
+                        playerState = 'playing';
+                    } else if (playerState === 2) {
+                        playerState = 'paused';
+                    }
+                    console.log('playerState: ' + playerState)
+                    if (playerState !== null) {
+                        socket.emit('send player state', newUserId, currentTime, playerState);
+                        console.log('Sent current state to [' + newUserId + '] (time: ' + currentTime + ', state: ' + playerState + ')');
+                    }
+                }
+            }
+        };
+
+        socket.on('get player state', handleGetCurrentState);
+
+        return () => {
+            socket.off('get player state', handleGetCurrentState);
+        };
+    }, [socket]);  // Include the socket in the dependencies array
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleEditClientPlayerState = (currentTime, playerState) => {
+            console.log('Received current state from host (time: ' + currentTime + ', state: ' + playerState + ')');
+            if (playerRef.current) {
+                console.log('playerRef.current')
+                console.log(playerRef.current.getInternalPlayer());
+                let internalPlayer = playerRef.current.getInternalPlayer();
+                if (internalPlayer) {
+                    console.log('internalPlayer')
+                    if (playerState === 'playing') {
+                        internalPlayer.playVideo();
+                        internalPlayer.seekTo(currentTime, 'seconds');
+                        setPlaying(true);
+                    } else if (playerState === 'paused') {
+                        internalPlayer.seekTo(currentTime, 'seconds');
+                        internalPlayer.pauseVideo();
+                    }
+                } else {
+                    console.log('No internal player found')
+                }
+            } else {
+                console.log('No player found')
+            }
+        };
+        socket.on('edit client player state', handleEditClientPlayerState);
+        return () => {
+            socket.off('edit client player state', handleEditClientPlayerState);
+        };
+    }, [playerReady]);  
+
+    useEffect(() => {
+        if (playerRef.current) {
+            console.log(playerRef.current.getInternalPlayer());
         }
-    }, [playlist]);
+    }, [playerReady]);
 
-    // Lorsque l'hôte reçoit une demande pour obtenir le temps courant de la vidéo, 
-    // il obtient ce temps et l'envoie au nouvel utilisateur.
-    socket.on('get current time', (newUserId) => {
-        const currentTime = playerRef.current.getCurrentTime();
-        socket.emit('send current time', newUserId, currentTime);
-    });
-
+    const handlePlayerReady = () => {
+        // This function is called when your player component triggers the "ready" event
+        setPlayerReady(true);
+    };
 
     useEffect(() => {
-        // Récupérer le titre de la vidéo en utilisant l'API Youtube
-        // (à remplacer par une véritable demande à l'API)
+        setCurrentVideo(url);
+        handlePlayerReady();
         setPlaying(true);
-    }, [currentVideo]);
+    }, [url]);
 
     const playVideo = () => {
-        
-        const currentTime = playerRef.current.getCurrentTime();
-        socket.emit('video action', roomId, { type: 'play', time: currentTime });
+        if (isHost) {
+            const currentTime = playerRef.current.getCurrentTime();
+            socket.emit('video action', roomId, { type: 'play', time: currentTime });
+        }
     };
 
     const pauseVideo = () => {
@@ -63,12 +135,12 @@ function Player({ roomId, url, isHost, playlist }) {
     };
 
     const onEnd = () => {
-        console.log('Video ended');
-        socket.emit('next video', roomId);
+        if (isHost) {
+            socket.emit('next video', roomId);
+        }
     };
 
     const onProgress = state => {
-        // On met à jour le temps joué
         setPlayed(state.playedSeconds);
     };
 
@@ -90,13 +162,14 @@ function Player({ roomId, url, isHost, playlist }) {
                     ref={playerRef}
                     url={currentVideo}
                     controls={true}
-                    style={{ 
+                    style={{
                         pointerEvents: isHost ? 'auto' : 'none',
-                        width: '100px',                    
+                        width: '100px',
                     }}
                     config={{ youtube: { playerVars: { disablekb: isHost ? 0 : 1 } } }}
                     playing={playing}
                     onPlay={playVideo}
+                    onReady={handlePlayerReady}
                     onPause={pauseVideo}
                     onEnded={onEnd}
                     onProgress={onProgress}

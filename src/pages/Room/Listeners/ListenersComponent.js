@@ -4,26 +4,34 @@ const Listeners = ({ socket, roomId }) => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        // Assuming that 'users' is the event to listen for user data
         socket.on('room users', (usernames) => {
+            console.log('Received users: ', usernames);
             setUsers(usernames);
         });
 
-        // Emit an event to ask for user list when component mounts
-        // Assuming that 'get users' is the correct event for this
         socket.emit('get users', roomId);
 
-        // Cleanup function
         return () => {
-            socket.off('users');
+            // Correctly turn off the 'room users' listener
+            socket.off('room users');
         };
     }, [roomId, socket]);
+
+
+    const getRandomColor = () => {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
 
     return (
         <div className='rounded-2xl mt-4 bg-lightgray'>
             Listeners:
             {users.map((user, index) => (
-                <div key={index}>{user}</div>
+                <div key={index} style={{ color: getRandomColor() }}>{user}</div>
             ))}
         </div>
     );
