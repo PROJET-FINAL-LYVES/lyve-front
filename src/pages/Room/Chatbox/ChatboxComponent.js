@@ -16,9 +16,7 @@ function Chatbox({ roomId }) {
   }, []);
 
   const el = document.getElementById('chat-feed');
-  // id of the chat container ---------- ^^^
   useEffect(() => {
-
     if (el) {
       el.scrollTop = el.scrollHeight;
     }
@@ -31,8 +29,8 @@ function Chatbox({ roomId }) {
   };
 
   return (
-    <section className="chatbox-wrapper max-w-96 py-4 px-8 h-full flex flex-col content-between bg-black">
-      <h2 className="py-4">Chatbox</h2>
+    <section className="chatbox-wrapper max-w-96 py-4 px-6 h-full flex flex-col content-between bg-black">
+      <h2 className="py-4 font-bold text-2xl text-gold">Chatbox</h2>
       <span id="chat-feed" className="chatbox-content w-100 h-full flex-col-reverse text-start overflow-auto flex-wrap break-words">
         {messages.map((message, i) => (
           <p className="mb-2 w-full block" key={i}>{message}</p>

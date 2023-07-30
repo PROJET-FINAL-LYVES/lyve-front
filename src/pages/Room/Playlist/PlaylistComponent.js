@@ -1,15 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVideoSubmit, handleClearPlaylist }) {
-
+function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVideoSubmit, handleClearPlaylist, handleRemoveSong }) {
     return (
-        <div className=''>
-            A suivre
+        <div>
+            <span className='font-bold text-2xl text-gold'>A suivre</span>
             <div className='following-wrapper flex overflow-x-auto gap-4 w-5/6'>
                 {
                     playlist.map((song, index) => (
-                        <span key={index} className='following rounded-2xl w-32 h-32 bg-custom-gray p-8'>
-                            {song}
+                        <span key={index} className='following rounded-2xl w-24 h-content bg-custom-gray break-all p-4'>
+                            <div className='text-xs'>{song}</div>
+                            <div className='text-red-500'>
+                                {index !== 0 && isHost && <button onClick={() => handleRemoveSong(index)}>X</button>}
+                            </div>
                         </span>
                     ))
                 }
@@ -27,5 +29,6 @@ function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVide
         </div>
     );
 }
+
 
 export default Playlist;

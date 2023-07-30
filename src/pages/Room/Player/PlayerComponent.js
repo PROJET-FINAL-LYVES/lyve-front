@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactPlayer from "react-player";
 import socket from '../../../socket';
 
-function Player({ roomId, isHost, url }) {
+function Player({ roomId, isHost, url, onSkipVideo }) {
     const playerRef = useRef();
     const [currentVideo, setCurrentVideo] = useState(url);
     const [playing, setPlaying] = useState(false);
@@ -36,7 +36,13 @@ function Player({ roomId, isHost, url }) {
         };
     }, []);
 
+    useEffect(() => {
+        console.log(currentVideo)
+        if(playerRef.current && playerRef.current.getInternalPlayer()){
 
+            setPlaying(true);
+        }
+    }, [currentVideo])
 
     useEffect(() => {
         if (!socket) return;
@@ -71,7 +77,6 @@ function Player({ roomId, isHost, url }) {
 
     useEffect(() => {
         const handleEditClientPlayerState = (currentTime, playerState) => {
-            // Add .1 seconds to the currentTime
             const updatedCurrentTime = currentTime + 1.5;
 
             if (playerState === 'playing') {
@@ -85,7 +90,6 @@ function Player({ roomId, isHost, url }) {
                 setTimeout(() => {
                     playerRef.current.seekTo(currentTime, 'seconds');
                     setPlaying(false);
-                    playerRef.current.getInternalPlayer().pauseVideo();
                 }, 1000);
             }
         };
@@ -97,6 +101,17 @@ function Player({ roomId, isHost, url }) {
         };
     }, [playerReady]);
 
+    useEffect(() => {
+        const handleSetVideoUrl = (newUrl) => {
+            setCurrentVideo(newUrl);
+        };
+
+        socket.on('set video url', handleSetVideoUrl);
+
+        return () => {
+            socket.off('set video url', handleSetVideoUrl);
+        };
+    }, [socket]);
 
     const handlePlayerReady = () => {
         setPlayerReady(true);
@@ -147,15 +162,17 @@ function Player({ roomId, isHost, url }) {
 
     return (
         <div className="player rounded-2xl mb-4 bg-opacity-50 bg-gradient-to-t from-fadestart to-fadeend">
-            <div className="player_wrapper p-8">
+            <div className="player_wrapper h-96 p-6">
                 <ReactPlayer
                     ref={playerRef}
                     url={currentVideo}
                     controls={true}
                     style={{
                         pointerEvents: isHost ? 'auto' : 'none',
-                        width: '100px',
                     }}
+                    width='100%'
+                    height='100%'
+                    key={currentVideo}  // Add this line
                     config={{ youtube: { playerVars: { disablekb: isHost ? 0 : 1 } } }}
                     playing={playing}
                     onPlay={playVideo}
@@ -166,6 +183,8 @@ function Player({ roomId, isHost, url }) {
                     onDuration={onDuration}
                 />
             </div>
+            {isHost && <button className="text-white hover:text-gold transition-all" onClick={onSkipVideo}>Video suivante</button>}
+
             {/* <div>
                 <div style={{ background: 'grey', height: '10px', width: '100%', position: 'relative' }}>
                     <div style={{ background: 'gold', height: '100%', width: `${(played / duration) * 100}%` }} />

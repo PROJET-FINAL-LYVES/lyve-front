@@ -27,6 +27,14 @@ const Room = () => {
         setVideoUrl('');
     };
 
+    const handleRemoveSong = (songIndex) => {
+        socket.emit('remove song', roomId, songIndex);
+    };
+
+    const handleSkipVideo = () => {
+        socket.emit('next video', roomId);
+    };
+
     useEffect(() => {
         socket.emit('join room', roomId);
         socket.on('host status', (status) => {
@@ -60,9 +68,7 @@ const Room = () => {
         return () => {
             socket.off('set video url', handleSetVideoUrl);
         };
-    }, [socket, roomId]);  // Add roomId as a dependency
-
-
+    }, [socket, roomId]);  
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -77,19 +83,19 @@ const Room = () => {
             </div>
             <div className='h-full basis-3/5 max-w-5xl py-4 pl-4 flex flex-col'>
                 <div className='flex justify-between items-center mb-4'>
-                    <h2 className='text-2xl font-bold'>Room ID: {roomId}</h2>
+                    <h2 className='text-xl font-bold'>Room ID: {roomId}</h2>
                     <div className='flex items-center'>
-                        <div className=' text-gold mr-4'>{isHost ? "Vous êtes l'hôte de ce salon" : "Vous n'êtes pas l'hôte de ce salon"}</div>
+                        <div className=' text-gold text-sm mr-4'>{isHost ? "Vous êtes l'hôte de ce salon" : "Vous n'êtes pas l'hôte de ce salon"}</div>
                     </div>
                 </div>
-                {!videoUrl && (
+                {!currentVideo && (
                     <div className='text-sm font-bold text-gold'>
                         Aucune vidéo n'est en cours de lecture
                     </div>
                 )}
-                <Player roomId={roomId} isHost={isHost} url={currentVideo} />
+                <Player roomId={roomId} isHost={isHost} url={currentVideo} onSkipVideo={handleSkipVideo} />
 
-                <div className='rounded-2xl  p-8 bg-lightgray'>
+                <div className='rounded-2xl  p-6 pt-4 bg-lightgray'>
                     <Playlist
                         roomId={roomId}
                         isHost={isHost}
@@ -98,11 +104,11 @@ const Room = () => {
                         handleVideoUrlChange={handleVideoUrlChange}
                         handleVideoSubmit={handleVideoSubmit}
                         handleClearPlaylist={handleClearPlaylist}
+                        handleRemoveSong={handleRemoveSong}
                     />
                 </div>
             </div>
-            <div className='rounded-2xl w-full min-w-[10%] basis-1/5  m-4 p-8 bg-lightgray'>
-                {/* Pass socket as a prop to the Listeners component */}
+            <div className='rounded-2xl w-full min-w-[10%] basis-1/5  m-4 p-4 bg-lightgray'>
                 <Listeners roomId={roomId} socket={socket} />
             </div>
         </div>

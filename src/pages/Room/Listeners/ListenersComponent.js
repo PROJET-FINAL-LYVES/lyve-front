@@ -8,11 +8,10 @@ const Listeners = ({ socket, roomId }) => {
             console.log('Received users: ', usernames);
             setUsers(usernames);
         });
-
+        
         socket.emit('get users', roomId);
 
         return () => {
-            // Correctly turn off the 'room users' listener
             socket.off('room users');
         };
     }, [roomId, socket]);
@@ -28,10 +27,12 @@ const Listeners = ({ socket, roomId }) => {
     };
 
     return (
-        <div className='rounded-2xl mt-4 bg-lightgray'>
-            Listeners:
+        <div className='rounded-2xl bg-lightgray'>
+            <div className='font-bold text-2xl text-gold mb-4'>
+                Participants
+            </div>
             {users.map((user, index) => (
-                <div key={index} style={{ color: getRandomColor() }}>{user}</div>
+                <div className='text-xs' key={index} style={{ color: getRandomColor() }}>{user}</div>
             ))}
         </div>
     );
