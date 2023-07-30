@@ -2,9 +2,6 @@ import React, { useEffect } from 'react';
 
 function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVideoSubmit, handleClearPlaylist }) {
 
-    useEffect(() => {
-        console.log(playlist)
-    }, [playlist])
     return (
         <div className=''>
             A suivre
@@ -17,7 +14,9 @@ function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVide
                     ))
                 }
             </div>
-            <button onClick={handleClearPlaylist}>Clear Playlist</button>
+            {isHost &&
+                <button onClick={handleClearPlaylist}>Clear Playlist</button>
+            }
             <div>
                 <form onSubmit={handleVideoSubmit} className='playlist-form flex flex-col'>
                     <input className="bg-black p-4 w-2/4 mx-auto border-gold border rounded-0 text-lightgray font-bold text-sm rounded  py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"

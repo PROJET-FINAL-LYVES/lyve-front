@@ -82,7 +82,11 @@ const Room = () => {
                         <div className=' text-gold mr-4'>{isHost ? "Vous êtes l'hôte de ce salon" : "Vous n'êtes pas l'hôte de ce salon"}</div>
                     </div>
                 </div>
-
+                {!videoUrl && (
+                    <div className='text-sm font-bold text-gold'>
+                        Aucune vidéo n'est en cours de lecture
+                    </div>
+                )}
                 <Player roomId={roomId} isHost={isHost} url={currentVideo} />
 
                 <div className='rounded-2xl  p-8 bg-lightgray'>

@@ -16,6 +16,7 @@ function Player({ roomId, isHost, url }) {
         const handleClientVideoAction = (action, time) => {
             console.log('Received video action: ', action, time);
             if (playerRef.current && playerRef.current.getInternalPlayer()) {
+                console.log('Player found')
                 if (action.type === 'play') {
                     playerRef.current.seekTo(time, 'seconds');
                     playerRef.current.getInternalPlayer().playVideo();
@@ -31,7 +32,6 @@ function Player({ roomId, isHost, url }) {
         socket.on('client video action', handleClientVideoAction);
 
         return () => {
-            // Cleanup function to remove the event listener when the component unmounts
             socket.off('client video action', handleClientVideoAction);
         };
     }, []);
@@ -63,61 +63,47 @@ function Player({ roomId, isHost, url }) {
                 }
             }
         };
-
         socket.on('get player state', handleGetCurrentState);
-
         return () => {
             socket.off('get player state', handleGetCurrentState);
         };
-    }, [socket]);  // Include the socket in the dependencies array
+    }, [socket]);
 
     useEffect(() => {
-        if (!socket) return;
-
         const handleEditClientPlayerState = (currentTime, playerState) => {
-            console.log('Received current state from host (time: ' + currentTime + ', state: ' + playerState + ')');
-            if (playerRef.current) {
-                console.log('playerRef.current')
-                console.log(playerRef.current.getInternalPlayer());
-                let internalPlayer = playerRef.current.getInternalPlayer();
-                if (internalPlayer) {
-                    console.log('internalPlayer')
-                    if (playerState === 'playing') {
-                        internalPlayer.playVideo();
-                        internalPlayer.seekTo(currentTime, 'seconds');
-                        setPlaying(true);
-                    } else if (playerState === 'paused') {
-                        internalPlayer.seekTo(currentTime, 'seconds');
-                        internalPlayer.pauseVideo();
-                    }
-                } else {
-                    console.log('No internal player found')
-                }
-            } else {
-                console.log('No player found')
+            // Add .1 seconds to the currentTime
+            const updatedCurrentTime = currentTime + 1.5;
+
+            if (playerState === 'playing') {
+                playerRef.current.seekTo(updatedCurrentTime, 'seconds');
+                setPlaying(true);
+                setTimeout(() => {
+                    playerRef.current.seekTo(updatedCurrentTime, 'seconds');
+                }, 100);
+            } else if (playerState === 'paused') {
+                setPlaying(true);
+                setTimeout(() => {
+                    playerRef.current.seekTo(currentTime, 'seconds');
+                    setPlaying(false);
+                    playerRef.current.getInternalPlayer().pauseVideo();
+                }, 1000);
             }
         };
+
         socket.on('edit client player state', handleEditClientPlayerState);
+
         return () => {
             socket.off('edit client player state', handleEditClientPlayerState);
         };
-    }, [playerReady]);  
-
-    useEffect(() => {
-        if (playerRef.current) {
-            console.log(playerRef.current.getInternalPlayer());
-        }
     }, [playerReady]);
 
+
     const handlePlayerReady = () => {
-        // This function is called when your player component triggers the "ready" event
         setPlayerReady(true);
     };
 
     useEffect(() => {
         setCurrentVideo(url);
-        handlePlayerReady();
-        setPlaying(true);
     }, [url]);
 
     const playVideo = () => {
@@ -141,11 +127,15 @@ function Player({ roomId, isHost, url }) {
     };
 
     const onProgress = state => {
-        setPlayed(state.playedSeconds);
+        if (isHost) {
+            setPlayed(state.playedSeconds);
+        }
     };
 
     const onDuration = (duration) => {
-        setDuration(duration);
+        if (isHost) {
+            setDuration(duration);
+        }
     };
 
     const formatTime = (seconds) => {
@@ -176,12 +166,12 @@ function Player({ roomId, isHost, url }) {
                     onDuration={onDuration}
                 />
             </div>
-            <div>
+            {/* <div>
                 <div style={{ background: 'grey', height: '10px', width: '100%', position: 'relative' }}>
                     <div style={{ background: 'gold', height: '100%', width: `${(played / duration) * 100}%` }} />
                 </div>
                 <div>{`${formatTime(played)} / ${formatTime(duration)}`}</div>
-            </div>
+            </div> */}
         </div>
     );
 }
