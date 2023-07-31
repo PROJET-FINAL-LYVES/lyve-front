@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
-const Listeners = ({ socket, roomId }) => {
+const Listeners = ({ socket, roomId, isHost }) => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
         socket.on('room users', (usernames) => {
-            console.log('Received users: ', usernames);
             setUsers(usernames);
         });
-        
+
         socket.emit('get users', roomId);
 
         return () => {
             socket.off('room users');
         };
     }, [roomId, socket]);
-
 
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';

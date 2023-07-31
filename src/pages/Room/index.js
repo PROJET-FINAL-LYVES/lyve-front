@@ -3,7 +3,7 @@ import Chatbox from './Chatbox/ChatboxComponent';
 import Player from './Player/PlayerComponent';
 import Playlist from './Playlist/PlaylistComponent';
 import Listeners from './Listeners/ListenersComponent';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import socket from '../../socket';
 
 const Room = () => {
@@ -12,6 +12,18 @@ const Room = () => {
     const [videoUrl, setVideoUrl] = useState('');
     const [currentVideo, setCurrentVideo] = useState('');
     const [playlist, setPlaylist] = useState([]);
+
+
+    const location = useLocation();
+
+    useEffect(() => {
+        const currentPath = location.pathname;
+        return () => {
+            if (currentPath !== location.pathname) {
+                socket.emit('disconnect', roomId);
+            }
+        };
+    }, [location, roomId]);
 
     const handleClearPlaylist = () => {
         socket.emit('clear playlist', roomId);
@@ -109,7 +121,7 @@ const Room = () => {
                 </div>
             </div>
             <div className='rounded-2xl w-full min-w-[10%] basis-1/5  m-4 p-4 bg-lightgray'>
-                <Listeners roomId={roomId} socket={socket} />
+                <Listeners roomId={roomId} socket={socket} isHost={isHost} />
             </div>
         </div>
     );

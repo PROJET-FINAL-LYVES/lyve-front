@@ -14,9 +14,7 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
 
     useEffect(() => {
         const handleClientVideoAction = (action, time) => {
-            console.log('Received video action: ', action, time);
             if (playerRef.current && playerRef.current.getInternalPlayer()) {
-                console.log('Player found')
                 if (action.type === 'play') {
                     playerRef.current.seekTo(time, 'seconds');
                     playerRef.current.getInternalPlayer().playVideo();
@@ -25,7 +23,6 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
                     playerRef.current.getInternalPlayer().pauseVideo();
                 }
             } else {
-                console.log('No player found')
             }
         };
 
@@ -37,7 +34,6 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     }, []);
 
     useEffect(() => {
-        console.log(currentVideo)
         if(playerRef.current && playerRef.current.getInternalPlayer()){
 
             setPlaying(true);
@@ -48,7 +44,6 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
         if (!socket) return;
 
         const handleGetCurrentState = (newUserId) => {
-            console.log('Sending current state to [' + newUserId + ']')
             if (playerRef.current) {
                 const currentTime = playerRef.current.getCurrentTime();
                 let internalPlayer = playerRef.current.getInternalPlayer();
@@ -61,10 +56,8 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
                     } else if (playerState === 2) {
                         playerState = 'paused';
                     }
-                    console.log('playerState: ' + playerState)
                     if (playerState !== null) {
                         socket.emit('send player state', newUserId, currentTime, playerState);
-                        console.log('Sent current state to [' + newUserId + '] (time: ' + currentTime + ', state: ' + playerState + ')');
                     }
                 }
             }

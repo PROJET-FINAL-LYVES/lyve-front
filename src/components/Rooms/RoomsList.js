@@ -1,5 +1,7 @@
 import React from 'react'
 import RoomsListItem from './RoomsListItem/RoomsListItem'
+import { Link } from 'react-router-dom'
+
 
 const RoomsList = () => {
     const rooms = [
@@ -92,14 +94,15 @@ const RoomsList = () => {
             <h2 className='font-bold text-2xl mb-12'>Rejoignez un serveur</h2>
             <div className='w-100 grid grid-cols-3 gap-16' >
                 {rooms.map(room => (
-                    <RoomsListItem
-                        key={room.id}
-                        name={room.name}
-                        description={room.description}
-                        imageUrl={room.imageUrl}
-                        listenersCount={room.listenersCount}
-                        nowPlaying={room.nowPlaying}
-                    />
+                    <Link to={`/server/${room.id}`} key={room.id}>
+                        <RoomsListItem
+                            name={room.name}
+                            description={room.description}
+                            imageUrl={room.imageUrl}
+                            listenersCount={room.listenersCount}
+                            nowPlaying={room.nowPlaying}
+                        />
+                    </Link>
                 ))}
             </div>
         </section>

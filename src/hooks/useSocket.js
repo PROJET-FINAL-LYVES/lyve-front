@@ -5,7 +5,6 @@ const useSocket = (roomId, isHost, playerRef) => {
     // eslint-disable-next-line
     useEffect(() => {
         socket.on('client video action', (action, time) => {
-            console.log('Received video action: ', action, time);
             if (playerRef.current && playerRef.current.getInternalPlayer()) {
                 if (action.type === 'play') {
                     playerRef.current.seekTo(time, 'seconds');
