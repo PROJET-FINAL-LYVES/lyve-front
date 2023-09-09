@@ -16,6 +16,7 @@ import axios from "axios";
 const LoginForm = () => {
 
     const { setIsLoading } = useLoading();
+    const [errorMessage, setErrorMessage] = useState("");
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -27,17 +28,27 @@ const LoginForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setIsLoading(true); // Set isLoading to true when the form is submitted
+        setIsLoading(true);
         instance
             .post("/login", { mail: email, password: password })
-            .then((response) => {
-                auth.login(response.data.user);
-            })
+
+           .then((response) => {
+            console.log("Full response:", response);
+            console.log("Response data:", response.data);
+            if (response.data && response.data.user && response.data.token) {
+                auth.login(response.data.user, response.data.user.token);  // Passez le token ici
+            }
+        })
             .catch((error) => {
+                if (error.response && error.response.data) {
+                    setErrorMessage(error.response.data.message.join(' '));
+                } else {
+                    setErrorMessage("An unknown error occurred.");
+                }
                 console.error(error);
             })
             .finally(() => {
-                setIsLoading(false); // Set isLoading back to false after the request is completed
+                setIsLoading(false);
             });
     };
 
@@ -90,6 +101,7 @@ const LoginForm = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
+                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                 <div className="flex items-center justify-center">
                     <SimpleButton
                         label="Se connecter"
