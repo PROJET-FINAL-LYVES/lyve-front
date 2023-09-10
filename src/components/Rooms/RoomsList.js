@@ -1,112 +1,77 @@
-import React from 'react'
 import RoomsListItem from './RoomsListItem/RoomsListItem'
 import { Link } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../context/AuthProvider'; // or wherever your socket context is
 
 
 const RoomsList = () => {
-    const rooms = [
-        {
-            id: 1,
-            name: 'Server 1',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 23,
-            nowPlaying: 'Macklemore - Thrift Shop'
-        },
-        {
-            id: 2,
-            name: 'Server 2',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 10,
-            nowPlaying: 'Migos - Bad and Boujee'
-        },
-        {
-            id: 3,
-            name: 'Server 3',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 5,
-            nowPlaying: 'Abel31 - 7 Rings'
-        },
-        {
-            id: 4,
-            name: 'Server 4',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 2,
-            nowPlaying: 'Patryk Polonais - 7 Rings'
-        },
-        {
-            id: 5,
-            name: 'Server 5',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 1,
-            nowPlaying: 'Macklemore - Thrift Shop'
-        },
+    const [rooms, setRooms] = useState([]);
+    const { socket } = useContext(AuthContext); // Replace AuthContext with your actual socket context if different
 
-        {
-            id: 6,
-            name: 'Server 6',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 23,
-            nowPlaying: 'Macklemore - Thrift Shop'
-        },
-        {
-            id: 7,
-            name: 'Server 7',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 10,
-            nowPlaying: 'Migos - Bad and Boujee'
-        },
-        {
-            id: 8,
+    useEffect(() => {
+        if (socket) {
+            // Request initial list of rooms
+            socket.emit('fetch_rooms');
+            console.log('fetch_rooms')
+            // Listen for the initial list of rooms
+            socket.on('initial_rooms', (initialRooms) => {
+                setRooms(initialRooms);
+            });
 
-            name: 'Server 8',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 5,
-            nowPlaying: 'Abel31 - 7 Rings'
-        },
-        {
-            id: 9,
-            name: 'Server 9',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 2,
+            // Listen for new room creation
+            socket.on('create room', (newRoom) => {
 
-            nowPlaying: 'Patryk Polonais - 7 Rings'
-        },
-        {
-            id: 10,
-            name: 'Server 10',
-            description: 'Lorem ipsum',
-            imageUrl: 'https://placehold.it/200x200',
-            listenersCount: 1,
-            nowPlaying: 'Macklemore - Thrift Shop'
-        },
-    ]
+                setRooms(prevRooms => [...prevRooms, newRoom]);
+                socket.emit('fetch_rooms');
+            });
+
+            return () => {
+                socket.off('initial_rooms');
+                socket.off('create_room');
+            };
+        }
+    }, [socket]);
+
+    useEffect(() => {
+        if (socket) {
+            // Listen for room deletion
+            socket.on('delete room', (deletedRoomId) => {
+                console.log('delete room')
+                setRooms(prevRooms => prevRooms.filter(room => room.roomId !== deletedRoomId));
+            });
+
+            return () => {
+                socket.off('delete room');
+            };
+        }
+    }, [socket]);
+
+    const handleDelete = (room) => {
+        console.log(room)
+        // Emit the DELETE_ROOM_EVENT to the server
+        socket.emit('delete room',room.roomId);
+    };
+
     return (
         <section className='servers-list max-w-screen-lg mx-auto p-4 mt-20'>
             <h2 className='font-bold text-2xl mb-12'>Rejoignez un serveur</h2>
             <div className='w-100 grid grid-cols-3 gap-16' >
-                {rooms.map(room => (
-                    <Link to={`/server/${room.id}`} key={room.id}>
+                {rooms.map((room, index) => (
+                    // <Link to={`/server/${room.hostId}`} key={index}>
                         <RoomsListItem
+                            key={index}
                             name={room.name}
-                            description={room.description}
-                            imageUrl={room.imageUrl}
-                            listenersCount={room.listenersCount}
-                            nowPlaying={room.nowPlaying}
+                            room={room}
+                            onDelete={handleDelete}
+                            // listenersCount={room.userList.length} // Update this based on your real data
+                            // nowPlaying={room.musicType} // Update this based on your real data
                         />
-                    </Link>
+                    // </Link>
                 ))}
             </div>
         </section>
-    )
+    );
+
 }
 
 export default RoomsList
