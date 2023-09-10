@@ -1,7 +1,7 @@
 import React from 'react'
 import SimpleButton from "../../components/Buttons/SimpleButton";
 
-import { useAuth } from '../../context/AuthContext'
+import useAuth from '../../hooks/useAuth';
 
 const MyAccount = () => {
 

@@ -4,18 +4,18 @@ import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './utils/serviceworker/serviceWorkerRegistration';
 import reportWebVitals from './utils/serviceworker/reportWebVitals';
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthProvider";
 import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </AuthProvider>
-  </React.StrictMode>
+  //  </React.StrictMode>
 );
 
 // If you want your app to work offline and load faster, you can change

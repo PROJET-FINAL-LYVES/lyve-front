@@ -5,7 +5,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import { useAuth } from './context/AuthContext';
+import useAuth from './hooks/useAuth';
 import { LoadingProvider, useLoading } from './context/LoadingContext';
 
 import Layout from './components/Layout/Layout';
@@ -18,11 +18,22 @@ import LandingComponent from './pages/Landing';
 import MyAccountComponent from './pages/MyAccount';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import Loader from './components/Loader/Loader';
+import socket from './socket';
 
 const App = () => {
   const { currentUser } = useAuth();
   const isLoading = useLoading();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('Socket connected');
+    });
+
+    return () => {
+      socket.off('connect');
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (currentUser && (window.location.pathname === '/login' || window.location.pathname === '/signup')) {

@@ -4,17 +4,22 @@ import SocialButtons from "../../components/Buttons/SocialButtons";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import Separator from "../../components/Separator/Separator";
 
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useState } from "react";
 import { useLoading } from '../../context/LoadingContext';
 
 import axios from "axios";
 
 const SignupForm = () => {
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const { setIsLoading } = useLoading();
+    const [errors, setErrors] = useState({}); // State variable to hold error messages
 
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
+    const [newsletter, setNewsletter] = useState(false);
+    const [dataSharing, setDataSharing] = useState(false);
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [pseudo, setPseudo] = useState("");
@@ -24,14 +29,24 @@ const SignupForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setIsLoading(true); // Set isLoading to true when the form is submitted
+        setIsLoading(true);
+
+        // Vérification des champs
+        if (!email || !emailConfirm || !password || !passwordConfirm || !pseudo || !birthday) {
+            console.error("Tous les champs sont obligatoires.");
+            setIsLoading(false);
+            return;
+        }
+
         if (email !== emailConfirm) {
             console.error("Les adresses e-mail ne correspondent pas.");
+            setIsLoading(false);
             return;
         }
 
         if (password !== passwordConfirm) {
             console.error("Les mots de passe ne correspondent pas.");
+            setIsLoading(false);
             return;
         }
 
@@ -42,10 +57,13 @@ const SignupForm = () => {
                 mail: email,
                 dob: birthday,
                 password: password,
+                newsletter: newsletter,
+                data_sharing: dataSharing,
                 password_confirm: passwordConfirm,
             })
-            .then((event) => {
-                console.error(event);
+            .then((response) => {
+                console.log("Response data:", response.data);
+                navigate("/login"); // Redirect to login page
             })
             .catch((error) => {
                 console.error(error);
@@ -160,12 +178,21 @@ const SignupForm = () => {
                     </label>
                 </div>
                 <div className="mb-8 flex text-left items-center">
-                    <input type="checkbox" className="mr-2 leading-tight inline " />
+                    <input 
+                        type="checkbox" 
+                        className="mr-2 leading-tight inline " 
+                        onChange={(e) => setNewsletter(e.target.checked)}
+                    />
                     <label className=" text-white text-left text-xs font-light  inline-block">
-                        J'accepte de recevoir des actualités et des offres.                    </label>
+                        J'accepte de recevoir des actualités et des offres.                    
+                    </label>
                 </div>
                 <div className="mb-8 flex text-left items-center">
-                    <input type="checkbox" className="mr-2 leading-tight inline " />
+                    <input 
+                        type="checkbox" 
+                        className="mr-2 leading-tight inline "
+                        onChange={(e) => setDataSharing(e.target.checked)}    
+                    />
                     <label className=" text-white text-left text-xs font-light  inline-block">
                         Partagez les données sur mon inscription avec les fournisseurs de contenu à des fins de marketing. Notez que vos données peuvent être transférées vers des pays en dehors de l'Espace économique européen, comme précisé dans notre Politique de confidentialité.
                     </label>
@@ -174,8 +201,10 @@ const SignupForm = () => {
                     En vous inscrivant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.
                 </p>
                 <p className="mb-8 flex text-xs text-center items-center">
-                    Pour en savoir plus sur la façon dont [nom de la marque] recueille, utilise, partage et protège vos données personnelles, veuillez consulter la Politique de confidentialité de [nom de la marque].
+                    Pour en savoir plus sur la façon dont Lyve recueille, utilise, partage et protège vos données personnelles, veuillez consulter la Politique de confidentialité de Lyve.
                 </p>
+                {errors.email && <p>{errors.email}</p>} {/* Display email error */}
+                {errors.pseudo && <p>{errors.pseudo}</p>} {/* Display pseudo error */}
                 <div className="flex items-center justify-center">
                     <SimpleButton
                         label="S'inscrire"

@@ -8,7 +8,7 @@ import SimpleButton from "../../components/Buttons/SimpleButton";
 import { Link } from "react-router-dom";
 
 import { useLoading } from '../../context/LoadingContext';
-import { useAuth } from "../../context/AuthContext";
+import useAuth from "../../hooks/useAuth";
 
 
 import axios from "axios";
@@ -35,7 +35,7 @@ const LoginForm = () => {
            .then((response) => {
             console.log("Full response:", response);
             console.log("Response data:", response.data);
-            if (response.data && response.data.user && response.data.token) {
+            if (response.data && response.data.user && response.data.user.token) {
                 auth.login(response.data.user, response.data.user.token);  // Passez le token ici
             }
         })
