@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Chatbox from './Chatbox/ChatboxComponent';
 import Player from './Player/PlayerComponent';
 import Playlist from './Playlist/PlaylistComponent';
 import Listeners from './Listeners/ListenersComponent';
-import { useParams, useLocation } from 'react-router-dom';
-import socket from '../../socket';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthProvider';
+
 
 const Room = () => {
     const { id: roomId } = useParams();
@@ -12,18 +13,33 @@ const Room = () => {
     const [videoUrl, setVideoUrl] = useState('');
     const [currentVideo, setCurrentVideo] = useState('');
     const [playlist, setPlaylist] = useState([]);
+    const { currentUser, login, logout, socket } = useContext(AuthContext);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
 
 
     const location = useLocation();
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        const currentPath = location.pathname;
+        if (!currentUser) {
+            setShowLoginModal(true);
+            navigate('/login');
+
+        }
+    }, [currentUser]);
+
+    useEffect(() => {
+        console.log('Joined room', location.pathname);
+
         return () => {
-            if (currentPath !== location.pathname) {
-                socket.emit('disconnect', roomId);
-            }
+            if (!socket) return;
+            console.log('Leaving room', location.pathname, roomId  );
+            socket.emit('leave room v2', roomId);
         };
-    }, [location, roomId]);
+    }, [location.pathname, roomId]); 
 
     const handleClearPlaylist = () => {
         socket.emit('clear playlist', roomId);
@@ -47,25 +63,40 @@ const Room = () => {
         socket.emit('next video', roomId);
     };
 
+    const closeModal = () => {
+        setShowErrorModal(false);
+        window.location.href = '/';
+    };
+
+
     useEffect(() => {
-        socket.emit('join room', roomId);
-        socket.on('host status', (status) => {
-            setIsHost(status);
-        });
-
-        socket.emit('get video url', roomId);
-
-        socket.on('set video url', (videoUrl) => {
-            setCurrentVideo(videoUrl);
-        });
-        socket.on('update playlist', (newPlaylist) => {
-            setPlaylist(newPlaylist);
-        });
-        return () => {
-            socket.off('host status');
-            socket.off('set video url');
-            socket.off('update playlist');
-        };
+        if (socket) {
+            socket.emit('join room v2', roomId);
+            socket.on('join room v2', (response) => {
+                if (response.message) {
+                    setErrorMsg(response.message);
+                    setShowErrorModal(true);
+                }
+            });
+    
+            socket.on('host status', (status) => {
+                setIsHost(status);
+            });
+    
+            socket.emit('get video url', roomId);
+    
+            socket.on('set video url', (videoUrl) => {
+                setCurrentVideo(videoUrl);
+            });
+            socket.on('update playlist', (newPlaylist) => {
+                setPlaylist(newPlaylist);
+            });
+            return () => {
+                socket.off('host status');
+                socket.off('set video url');
+                socket.off('update playlist');
+            };
+        }
     }, [roomId, socket]);
 
     useEffect(() => {
@@ -83,13 +114,16 @@ const Room = () => {
     }, [socket, roomId]);  
 
     useEffect(() => {
-        socket.on('connect', () => {
-            console.log(`Connected with id: ${socket.id}`);
-        });
+        if(socket) {
+            socket.on('connect', () => {
+                console.log(`Connected with id: ${socket.id}`);
+            });
+        }
     }, []);
 
     return (
         <div className='room flex'>
+            {showErrorModal && <ErrorModal message={errorMsg} onClose={closeModal} />}
             <div className='basis-1/5 flex-shrink min-w-[25%] '>
                 <Chatbox roomId={roomId} isHost={isHost} />
             </div>
@@ -126,5 +160,32 @@ const Room = () => {
         </div>
     );
 }
+
+const ErrorModal = ({ message, onClose }) => {
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-black p-7 w-auto mx-auto my-5 text-darkgray rounded-2xl relative">
+                <button
+                    onClick={onClose}
+                    className="text-white absolute top-4 right-4"
+                >
+                    X
+                </button>
+                <h2 className="text-white text-2xl font-bold mb-12">
+                    Error
+                </h2>
+                <p className="text-white">{message}</p>
+                <div className="flex items-center justify-center mt-8">
+                    <button
+                        onClick={onClose}
+                        className="bg-gold hover:bg-lightgray hover:text-white transition text-black font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
+                    >
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default Room;

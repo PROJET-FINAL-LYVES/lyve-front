@@ -26,7 +26,6 @@ const MyAccount = () => {
                 Mon compte
             </h1>
             <div className="text-white mb-6">
-                {/* {isLoading && <Loader/>} */}
                 <p>
                     <span className="font-bold">Nom d'utilisateur : </span>
                     {auth.currentUser.username}

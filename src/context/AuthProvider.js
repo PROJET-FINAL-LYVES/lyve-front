@@ -9,13 +9,13 @@ export const AuthProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
+        console.log("AuthProvider socket state:", socket ? socket.connected : 'No socket');
         const storedUser = Cookies.get("user");
         const storedToken = Cookies.get("token");
 
         if (storedUser && storedToken) {
             setCurrentUser(JSON.parse(storedUser));
 
-            // Initialize socket connection
             const newSocket = io("http://127.0.0.1:3001", {
                 auth: {
                     token: storedToken
@@ -27,6 +27,10 @@ export const AuthProvider = ({ children }) => {
             });
 
             setSocket(newSocket);
+            
+            return () => {
+                newSocket.disconnect();
+            };
         }
     }, []);
 
@@ -35,7 +39,6 @@ export const AuthProvider = ({ children }) => {
         Cookies.set("user", JSON.stringify(user));
         Cookies.set("token", token);
 
-        // Initialize socket connection
         const newSocket = io("http://127.0.0.1:3001", {
             auth: {
                 token

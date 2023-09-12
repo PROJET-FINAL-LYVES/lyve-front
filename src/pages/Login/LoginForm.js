@@ -36,7 +36,7 @@ const LoginForm = () => {
             console.log("Full response:", response);
             console.log("Response data:", response.data);
             if (response.data && response.data.user && response.data.user.token) {
-                auth.login(response.data.user, response.data.user.token);  // Passez le token ici
+                auth.login(response.data.user, response.data.user.token);
             }
         })
             .catch((error) => {

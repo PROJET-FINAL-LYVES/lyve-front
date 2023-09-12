@@ -23,7 +23,27 @@ const Navbar = () => {
   ];
 
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('create room', (roomId) => {
+        console.log('Received CREATE_ROOM_EVENT response:', roomId);
+        console.log('Redirecting to `/serve' + roomId + '`');
+        if (roomId) {
+          setIsLoading(true)
+          window.location.href = '/server/'+roomId
+          setIsLoading(false)
+        }
+      });
+
+      return () => {
+        socket.off('create room');
+      };
+    }
+  }, [socket]);
+
+
   const [musicType, setMusicType] = useState(MUSIC_TYPES[0]);
+
   useEffect(() => {
     if (socket) {
       socket.on('create room', (response) => {
@@ -33,7 +53,7 @@ const Navbar = () => {
       });
 
       return () => {
-        socket.off('CREATE_ROOM_EVENT');
+        socket.off('create room');
       };
     }
   }, [socket]);

@@ -59,7 +59,7 @@ const App = () => {
           <Route path="*" element={<p>There's nothing here: 404!</p>} />
         </Routes>
       </Layout>
-      {isLoading && <Loader />} {/* Add this line to render the Loader component */}
+      {isLoading && <Loader />}
     </LoadingProvider>
   );
 };

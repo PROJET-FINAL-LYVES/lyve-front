@@ -4,15 +4,17 @@ const Listeners = ({ socket, roomId, isHost }) => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        socket.on('room users', (usernames) => {
-            setUsers(usernames);
-        });
-
-        socket.emit('get users', roomId);
-
-        return () => {
-            socket.off('room users');
-        };
+        if (socket) {
+            socket.on('room users', (usernames) => {
+                setUsers(usernames);
+            });
+    
+            socket.emit('get users', roomId);
+    
+            return () => {
+                socket.off('room users');
+            };
+        }
     }, [roomId, socket]);
 
     const getRandomColor = () => {

@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import socket from '../socket';
 
 const useSocket = (roomId, isHost, playerRef) => {
-    // eslint-disable-next-line
     useEffect(() => {
         socket.on('client video action', (action, time) => {
             if (playerRef.current && playerRef.current.getInternalPlayer()) {

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { AuthContext } from "../../../context/AuthProvider";
 import { Link } from "react-router-dom";
@@ -29,13 +29,13 @@ const RoomsListItem = ({
         />
       </div>
       <div className="server-bottom w-full p-4 text-left">
-        <Link to={`/server/${room.hostId}`}>
-            <h3 className="font-bold text-xl mb-2">{name}</h3>
+        <Link to={`/server/${room.roomId}`}>
+          <h3 className="font-bold text-xl mb-2">{name}</h3>
         </Link>
         <p className="text-xs text-gray-200 mb-4">{description}</p>
-        <p className="text-sm text-white mb-4">
+        {/* <p className="text-sm text-white mb-4">
           {listenersCount} personnes sur le dancefloor
-        </p>
+        </p> */}
         <p className="text-sm text-white ">{nowPlaying}</p>
       </div>
       <button onClick={() => onDelete(room)}>X</button>
@@ -44,11 +44,11 @@ const RoomsListItem = ({
 };
 
 RoomsListItem.propTypes = {
-//   name: PropTypes.string.isRequired,
+  //   name: PropTypes.string. isRequired,
   // description: PropTypes.string.isRequired,
   // imageUrl: PropTypes.string.isRequired,
-//   listenersCount: PropTypes.number.isRequired,
-//   nowPlaying: PropTypes.string.isRequired,
+  //   listenersCount: PropTypes.number.isRequired,
+  //   nowPlaying: PropTypes.string.isRequired,
 };
 
 export default RoomsListItem;

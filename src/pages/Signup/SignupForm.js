@@ -4,17 +4,17 @@ import SocialButtons from "../../components/Buttons/SocialButtons";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import Separator from "../../components/Separator/Separator";
 
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useLoading } from '../../context/LoadingContext';
 
 import axios from "axios";
 
 const SignupForm = () => {
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate();
 
     const { setIsLoading } = useLoading();
-    const [errors, setErrors] = useState({}); // State variable to hold error messages
+    const [errors, setErrors] = useState({}); 
 
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
@@ -31,7 +31,6 @@ const SignupForm = () => {
         event.preventDefault();
         setIsLoading(true);
 
-        // Vérification des champs
         if (!email || !emailConfirm || !password || !passwordConfirm || !pseudo || !birthday) {
             console.error("Tous les champs sont obligatoires.");
             setIsLoading(false);
