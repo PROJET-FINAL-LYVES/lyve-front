@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react';
 const Listeners = ({ socket, roomId, isHost }) => {
     const [users, setUsers] = useState([]);
 
+
     useEffect(() => {
         if (socket) {
             socket.on('room users', (usernames) => {
                 setUsers(usernames);
             });
-    
+
             socket.emit('get users', roomId);
-    
+
             return () => {
                 socket.off('room users');
             };
@@ -25,15 +26,18 @@ const Listeners = ({ socket, roomId, isHost }) => {
         }
         return color;
     };
-
     return (
         <div className='rounded-2xl bg-lightgray'>
             <div className='font-bold text-2xl text-gold mb-4'>
                 Participants
             </div>
-            {users.map((user, index) => (
-                <div className='text-xs' key={index} style={{ color: getRandomColor() }}>{user}</div>
-            ))}
+            {Array.isArray(users) ? (
+                users.map((user, index) => (
+                    <div className='text-sm' key={index} style={{ color: getRandomColor() }}>{user.username}</div>
+                ))
+            ) : (
+                <p>No users found</p>
+            )}
         </div>
     );
 };

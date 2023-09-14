@@ -26,13 +26,7 @@ const Navbar = () => {
   useEffect(() => {
     if (socket) {
       socket.on('create room', (roomId) => {
-        console.log('Received CREATE_ROOM_EVENT response:', roomId);
-        console.log('Redirecting to `/serve' + roomId + '`');
-        if (roomId) {
-          setIsLoading(true)
-          window.location.href = '/server/'+roomId
-          setIsLoading(false)
-        }
+        alert(`Room created with id: ${roomId}`);
       });
 
       return () => {
@@ -71,16 +65,18 @@ const Navbar = () => {
   }, [socket]);
 
   const handleSubmit = (event) => {
+    const userId = currentUser._id
     event.preventDefault();
     socket.emit('create room', {
       name,
-      user: currentUser._id,
+      userId,
       type,
       maxUsers: maxUsers,
       musicType
     }, (ack) => {
       console.log('Server received the CREATE_ROOM_EVENT:', ack);
     });
+    return false;
   };
 
 

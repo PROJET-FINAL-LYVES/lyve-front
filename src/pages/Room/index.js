@@ -71,7 +71,7 @@ const Room = () => {
 
     useEffect(() => {
         if (socket) {
-            socket.emit('join room v2', roomId);
+            socket.emit('join room v2', roomId, currentUser._id);
             socket.on('join room v2', (response) => {
                 if (response.message) {
                     setErrorMsg(response.message);
