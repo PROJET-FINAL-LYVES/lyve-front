@@ -172,7 +172,7 @@ const ErrorModal = ({ message, onClose }) => {
                     X
                 </button>
                 <h2 className="text-white text-2xl font-bold mb-12">
-                    Error
+                    Erreur
                 </h2>
                 <p className="text-white">{message}</p>
                 <div className="flex items-center justify-center mt-8">
@@ -180,7 +180,7 @@ const ErrorModal = ({ message, onClose }) => {
                         onClick={onClose}
                         className="bg-gold hover:bg-lightgray hover:text-white transition text-black font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
                     >
-                        Back to Home
+                        Retour à l'accueil
                     </button>
                 </div>
             </div>

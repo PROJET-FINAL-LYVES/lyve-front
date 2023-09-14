@@ -94,7 +94,7 @@ const Navbar = () => {
                 onClick={() => setShowModal(true)}
                 className="text-white hover:text-gold transition-all"
               >
-                Create Room
+                Créer une room
               </button>
               <Link to='/admin' className="text-white hover:text-gold transition-all">Administration</Link>
               <Link to='/myaccount' className="text-white hover:text-gold transition-all">Mon Compte</Link>
@@ -123,12 +123,12 @@ const Navbar = () => {
             </button>
             <Logo />
             <h2 className="text-white text-2xl font-bold mb-12">
-              Create a New Room
+              Créer une room
             </h2>
             <form className="px-8 pt-6 pb-8 mb-4 text-white" onSubmit={handleSubmit}>
               <div className="mb-8">
                 <label className="block text-left text-white text-xs font-bold mb-3" htmlFor="name">
-                  Room Name
+                  Nom de la room
                 </label>
                 <input
                   className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -141,7 +141,7 @@ const Navbar = () => {
               </div>
               <div className="mb-8">
                 <label className="block text-left text-white text-xs font-bold mb-3" htmlFor="type">
-                  Room Type
+                  Type
                 </label>
                 <select
                   className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -155,7 +155,7 @@ const Navbar = () => {
               </div>
               <div className="mb-8">
                 <label className="block text-left text-white text-xs font-bold mb-3" htmlFor="musicType">
-                  Music Type
+                  Style de musique
                 </label>
                 <select
                   className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -172,7 +172,7 @@ const Navbar = () => {
               </div>
               <div className="mb-8">
                 <label className="block text-left text-white text-xs font-bold mb-3" htmlFor="maxUsers">
-                  Max People Inside
+                  Nb maximum de personnes
                 </label>
                 <input
                   className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -190,7 +190,7 @@ const Navbar = () => {
                   type="submit"
                   className="bg-gold hover:bg-lightgray hover:text-white transition text-black font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
                 >
-                  Create
+                  Créer
                 </button>
               </div>
             </form>
