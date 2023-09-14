@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import PropTypes from 'prop-types';
 import ReactPlayer from "react-player";
-import socket from '../../../socket';
+import { AuthContext } from '../../../context/AuthProvider';
 
 function Player({ roomId, isHost, url, onSkipVideo }) {
     const playerRef = useRef();
@@ -10,10 +10,13 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     const [duration, setDuration] = useState(0);
     const [played, setPlayed] = useState(0);
     const [playerReady, setPlayerReady] = useState(false);
-
+    const { currentUser, login, logout, socket } = useContext(AuthContext);
+ 
 
     useEffect(() => {
+        if (!socket) return;
         const handleClientVideoAction = (action, time) => {
+            console.log('received video action' + action.type + ' ' + time )
             if (playerRef.current && playerRef.current.getInternalPlayer()) {
                 if (action.type === 'play') {
                     playerRef.current.seekTo(time, 'seconds');
@@ -35,15 +38,15 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
 
     useEffect(() => {
         if(playerRef.current && playerRef.current.getInternalPlayer()){
-
+            
             setPlaying(true);
         }
     }, [currentVideo])
 
     useEffect(() => {
         if (!socket) return;
-
         const handleGetCurrentState = (newUserId) => {
+            console.log('get current state')
             if (playerRef.current) {
                 const currentTime = playerRef.current.getCurrentTime();
                 let internalPlayer = playerRef.current.getInternalPlayer();
@@ -69,6 +72,7 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     }, [socket]);
 
     useEffect(() => {
+        if (!socket) return;
         const handleEditClientPlayerState = (currentTime, playerState) => {
             const updatedCurrentTime = currentTime + 1.5;
 
@@ -95,6 +99,7 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     }, [playerReady]);
 
     useEffect(() => {
+        if (!socket) return;
         const handleSetVideoUrl = (newUrl) => {
             setCurrentVideo(newUrl);
         };
@@ -111,6 +116,7 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     };
 
     useEffect(() => {
+        console.log('url changed', url)
         setCurrentVideo(url);
     }, [url]);
 
@@ -146,12 +152,12 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
         }
     };
 
-    const formatTime = (seconds) => {
-        const s = Math.ceil(seconds);
-        const m = Math.floor(s / 60);
-        const remainingS = s % 60;
-        return `${m.toString().padStart(2, '0')}:${remainingS.toString().padStart(2, '0')}`;
-    };
+    // const formatTime = (seconds) => {
+    //     const s = Math.ceil(seconds);
+    //     const m = Math.floor(s / 60);
+    //     const remainingS = s % 60;
+    //     return `${m.toString().padStart(2, '0')}:${remainingS.toString().padStart(2, '0')}`;
+    // };
 
     return (
         <div className="player rounded-2xl mb-4 bg-opacity-50 bg-gradient-to-t from-fadestart to-fadeend">

@@ -32,11 +32,8 @@ const Room = () => {
     }, [currentUser]);
 
     useEffect(() => {
-        console.log('Joined room', location.pathname);
-
         return () => {
             if (!socket) return;
-            console.log('Leaving room', location.pathname, roomId  );
             socket.emit('leave room v2', roomId);
         };
     }, [location.pathname, roomId]); 
@@ -51,12 +48,12 @@ const Room = () => {
 
     const handleVideoSubmit = (event) => {
         event.preventDefault();
-        socket.emit('add video', roomId, videoUrl);
+        socket.emit('add video v2', roomId, videoUrl);
         setVideoUrl('');
     };
 
     const handleRemoveSong = (songIndex) => {
-        socket.emit('remove song', roomId, songIndex);
+        socket.emit('remove song v2', roomId, songIndex, currentUser._id);
     };
 
     const handleSkipVideo = () => {
@@ -67,7 +64,6 @@ const Room = () => {
         setShowErrorModal(false);
         window.location.href = '/';
     };
-
 
     useEffect(() => {
         if (socket) {
@@ -80,6 +76,7 @@ const Room = () => {
             });
     
             socket.on('host status', (status) => {
+                console.log('Received HOST_STATUS_EVENT:', status);
                 setIsHost(status);
             });
     
@@ -151,6 +148,7 @@ const Room = () => {
                         handleVideoSubmit={handleVideoSubmit}
                         handleClearPlaylist={handleClearPlaylist}
                         handleRemoveSong={handleRemoveSong}
+                        currentUser={currentUser}
                     />
                 </div>
             </div>

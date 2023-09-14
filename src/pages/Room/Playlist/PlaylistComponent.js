@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVideoSubmit, handleClearPlaylist, handleRemoveSong }) {
+function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVideoSubmit, handleClearPlaylist, handleRemoveSong, currentUser }) {
     return (
         <div>
             <span className='font-bold text-2xl text-gold'>A suivre</span>
@@ -8,16 +8,28 @@ function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVide
                 {
                     playlist.map((song, index) => (
                         <span key={index} className='following rounded-2xl w-24 h-content bg-custom-gray break-all p-4'>
-                            <div className='text-xs'>{song}</div>
+                            <div className='text-xs'>
+                                {song.name} <br />
+                                <span className='text-gold'>
+                                    {song.duration.hours}h {song.duration.minutes}m {song.duration.seconds}s <br />
+                                </span>
+                                {/* Display username of the person who posted the song */}
+                                <span className='text-gray-500'>
+                                    
+                                    {song.username}
+                                    </span>
+                            </div>
                             <div className='text-red-500'>
-                                {index !== 0 && isHost && <button onClick={() => handleRemoveSong(index)}>X</button>}
+                                {/* Check if the current user is the host or the one who added the song */}
+                                {index !== 0 && (isHost || (currentUser && currentUser._id === song.userId)) && <button onClick={() => handleRemoveSong(index)}>X</button>}
                             </div>
                         </span>
                     ))
                 }
+
             </div>
             {isHost &&
-                <button onClick={handleClearPlaylist}>Clear Playlist</button>
+                <button onClick={handleClearPlaylist}>Vider la playlist</button>
             }
             <div>
                 <form onSubmit={handleVideoSubmit} className='playlist-form flex flex-col'>

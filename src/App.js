@@ -56,7 +56,7 @@ const App = () => {
           <Route path="/login" element={<LoginComponent />} />
           <Route path="/signup" element={<SignupComponent />} />
           <Route path="/forgot" element={<ForgotPasswordComponent />} />
-          <Route path="*" element={<p>There's nothing here: 404!</p>} />
+          <Route path="*" element={<p>Rien à voir ici, 404!</p>} />
         </Routes>
       </Layout>
       {isLoading && <Loader />}
