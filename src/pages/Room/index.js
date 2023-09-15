@@ -36,7 +36,7 @@ const Room = () => {
             if (!socket) return;
             socket.emit('leave room v2', roomId);
         };
-    }, [location.pathname, roomId]); 
+    }, [location.pathname, roomId]);
 
     const handleClearPlaylist = () => {
         socket.emit('clear playlist', roomId);
@@ -74,14 +74,13 @@ const Room = () => {
                     setShowErrorModal(true);
                 }
             });
-    
+
             socket.on('host status', (status) => {
-                console.log('Received HOST_STATUS_EVENT:', status);
                 setIsHost(status);
             });
-    
+
             socket.emit('get video url', roomId);
-    
+
             socket.on('set video url', (videoUrl) => {
                 setCurrentVideo(videoUrl);
             });
@@ -108,10 +107,10 @@ const Room = () => {
         return () => {
             socket.off('set video url', handleSetVideoUrl);
         };
-    }, [socket, roomId]);  
+    }, [socket, roomId]);
 
     useEffect(() => {
-        if(socket) {
+        if (socket) {
             socket.on('connect', () => {
                 console.log(`Connected with id: ${socket.id}`);
             });
@@ -128,7 +127,7 @@ const Room = () => {
                 <div className='flex justify-between items-center mb-4'>
                     <h2 className='text-xl font-bold'>Room ID: {roomId}</h2>
                     <div className='flex items-center'>
-                        <div className=' text-gold text-sm mr-4'>{isHost ? "Vous êtes l'hôte de ce salon" : "Vous n'êtes pas l'hôte de ce salon"}</div>
+                        <div className=' text-gold text-sm mr-4'>{isHost ? "Vous êtes l'hôte de cette room" : "Vous n'êtes pas l'hôte de cette room"}</div>
                     </div>
                 </div>
                 {!currentVideo && (

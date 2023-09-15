@@ -9,14 +9,15 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     const [playing, setPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [played, setPlayed] = useState(0);
+    const [volume, setVolume] = useState(50);
     const [playerReady, setPlayerReady] = useState(false);
     const { currentUser, login, logout, socket } = useContext(AuthContext);
- 
+
 
     useEffect(() => {
         if (!socket) return;
         const handleClientVideoAction = (action, time) => {
-            console.log('received video action' + action.type + ' ' + time )
+            console.log('received video action' + action.type + ' ' + time)
             if (playerRef.current && playerRef.current.getInternalPlayer()) {
                 if (action.type === 'play') {
                     playerRef.current.seekTo(time, 'seconds');
@@ -37,8 +38,8 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     }, []);
 
     useEffect(() => {
-        if(playerRef.current && playerRef.current.getInternalPlayer()){
-            
+        if (playerRef.current && playerRef.current.getInternalPlayer()) {
+
             setPlaying(true);
         }
     }, [currentVideo])
@@ -87,7 +88,7 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
                 setTimeout(() => {
                     playerRef.current.seekTo(currentTime, 'seconds');
                     setPlaying(false);
-                }, 1000);
+                }, 2000);
             }
         };
 
@@ -119,6 +120,15 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
         console.log('url changed', url)
         setCurrentVideo(url);
     }, [url]);
+
+    useEffect(() => {
+        if (playerRef.current && playerRef.current.getInternalPlayer()) {
+            playerRef.current.getInternalPlayer().setVolume(volume);
+        }
+    }, [volume]);
+    const handleVolumeChange = (e) => {
+        setVolume(e.target.value);
+    };
 
     const playVideo = () => {
         if (isHost) {
@@ -152,13 +162,6 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
         }
     };
 
-    // const formatTime = (seconds) => {
-    //     const s = Math.ceil(seconds);
-    //     const m = Math.floor(s / 60);
-    //     const remainingS = s % 60;
-    //     return `${m.toString().padStart(2, '0')}:${remainingS.toString().padStart(2, '0')}`;
-    // };
-
     return (
         <div className="player rounded-2xl mb-4 bg-opacity-50 bg-gradient-to-t from-fadestart to-fadeend">
             <div className="player_wrapper h-96 p-6">
@@ -171,7 +174,7 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
                     }}
                     width='100%'
                     height='100%'
-                    key={currentVideo}  // Add this line
+                    key={currentVideo} 
                     config={{ youtube: { playerVars: { disablekb: isHost ? 0 : 1 } } }}
                     playing={playing}
                     onPlay={playVideo}
@@ -182,14 +185,23 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
                     onDuration={onDuration}
                 />
             </div>
-            {isHost && <button className="text-white hover:text-gold transition-all" onClick={onSkipVideo}>Video suivante</button>}
+            {currentVideo && (
+                <div className="flex px-5 w-100 items-center justify-between">
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                        className="slider mb-4"
+                    />
+                    {isHost && <button className="mb-4 bg-gold hover:bg-lightgray hover:text-white transition text-black text-xs font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
+                        onClick={onSkipVideo}>
+                        Video suivante
+                    </button>}
 
-            {/* <div>
-                <div style={{ background: 'grey', height: '10px', width: '100%', position: 'relative' }}>
-                    <div style={{ background: 'gold', height: '100%', width: `${(played / duration) * 100}%` }} />
                 </div>
-                <div>{`${formatTime(played)} / ${formatTime(duration)}`}</div>
-            </div> */}
+            )}
         </div>
     );
 }

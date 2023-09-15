@@ -13,14 +13,11 @@ function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVide
                                 <span className='text-gold'>
                                     {song.duration.hours}h {song.duration.minutes}m {song.duration.seconds}s <br />
                                 </span>
-                                {/* Display username of the person who posted the song */}
                                 <span className='text-gray-500'>
-                                    
                                     {song.username}
-                                    </span>
+                                </span>
                             </div>
                             <div className='text-red-500'>
-                                {/* Check if the current user is the host or the one who added the song */}
                                 {index !== 0 && (isHost || (currentUser && currentUser._id === song.userId)) && <button onClick={() => handleRemoveSong(index)}>X</button>}
                             </div>
                         </span>
@@ -29,13 +26,15 @@ function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVide
 
             </div>
             {isHost &&
-                <button onClick={handleClearPlaylist}>Vider la playlist</button>
+                <button className="text-xs bg-gold mb-4 hover:bg-darkgray hover:text-white transition text-black font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
+                    onClick={handleClearPlaylist}>Vider la playlist</button>
             }
             <div>
                 <form onSubmit={handleVideoSubmit} className='playlist-form flex flex-col'>
                     <input className="bg-black p-4 w-2/4 mx-auto border-gold border rounded-0 text-lightgray font-bold text-sm rounded  py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        type="url" value={videoUrl} onChange={handleVideoUrlChange} required />
-                    <button type="submit">Ajouter</button>
+                        type="url" value={videoUrl} onChange={handleVideoUrlChange} required placeholder='Url de la vidéo' />
+                    <button className="bg-gold text-xs w-fit m-auto hover:bg-darkgray hover:text-white transition text-black font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
+                        type="submit">Ajouter</button>
                 </form>
             </div>
         </div>

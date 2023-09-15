@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        console.log("AuthProvider socket state:", socket ? socket.connected : 'No socket');
         const storedUser = Cookies.get("user");
         const storedToken = Cookies.get("token");
 

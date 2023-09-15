@@ -61,14 +61,13 @@ const SignupForm = () => {
                 password_confirm: passwordConfirm,
             })
             .then((response) => {
-                console.log("Response data:", response.data);
-                navigate("/login"); // Redirect to login page
+                navigate("/login");
             })
             .catch((error) => {
                 console.error(error);
             })
             .finally(() => {
-                setIsLoading(false); // Set isLoading back to false after the request is completed
+                setIsLoading(false); 
             });
     };
 
@@ -202,8 +201,8 @@ const SignupForm = () => {
                 <p className="mb-8 flex text-xs text-center items-center">
                     Pour en savoir plus sur la façon dont Lyve recueille, utilise, partage et protège vos données personnelles, veuillez consulter la Politique de confidentialité de Lyve.
                 </p>
-                {errors.email && <p>{errors.email}</p>} {/* Display email error */}
-                {errors.pseudo && <p>{errors.pseudo}</p>} {/* Display pseudo error */}
+                {errors.email && <p>{errors.email}</p>}
+                {errors.pseudo && <p>{errors.pseudo}</p>}
                 <div className="flex items-center justify-center">
                     <SimpleButton
                         label="S'inscrire"

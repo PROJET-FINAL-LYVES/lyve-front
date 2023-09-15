@@ -64,9 +64,10 @@ function Chatbox({ roomId }) {
           className="bg-black p-4 mt-8 border-gold border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder="Type a message"
+          placeholder="Saisissez votre message"
         />
-        <button type="submit">Envoyer</button>
+        <button className="bg-gold text-xs hover:bg-lightgray hover:text-white transition text-black font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline"
+          type="submit">Envoyer</button>
       </form>
     </section>
   );

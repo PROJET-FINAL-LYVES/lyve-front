@@ -26,7 +26,6 @@ const Navbar = () => {
   useEffect(() => {
     if (socket) {
       socket.on('create room', (roomId) => {
-        alert(`Room created with id: ${roomId}`);
       });
 
       return () => {
@@ -41,7 +40,6 @@ const Navbar = () => {
   useEffect(() => {
     if (socket) {
       socket.on('create room', (response) => {
-        console.log('Received CREATE_ROOM_EVENT response:', response);
         setShowModal(false);
         setIsLoading(false);
       });
@@ -53,23 +51,17 @@ const Navbar = () => {
   }, [socket]);
 
   useEffect(() => {
-    if (socket) {
-      console.log("Navbar socket state:", socket.connected);
-    } else {
-      console.log("Navbar socket state: No socket");
-    }
-  }, [socket]);
-
-  useEffect(() => {
     console.log("Navbar socket state:", socket ? socket.connected : 'No socket');
   }, [socket]);
 
   const handleSubmit = (event) => {
     const userId = currentUser._id
+    const userName = currentUser.username
     event.preventDefault();
     socket.emit('create room', {
       name,
       userId,
+      userName,
       type,
       maxUsers: maxUsers,
       musicType
@@ -134,7 +126,7 @@ const Navbar = () => {
                   className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                   id="name"
                   type="text"
-                  placeholder="Enter Room Name"
+                  placeholder="Saisir le nom de la room"
                   value={name || ""}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -149,8 +141,8 @@ const Navbar = () => {
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >
-                  <option value="private">Private</option>
-                  <option value="public">Public</option>
+                  <option value="private">Privée</option>
+                  <option value="public">Publique</option>
                 </select>
               </div>
               <div className="mb-8">

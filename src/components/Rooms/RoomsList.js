@@ -10,32 +10,36 @@ const RoomsList = () => {
     useEffect(() => {
         if (socket) {
             socket.emit('fetch_rooms');
+
             socket.on('initial_rooms', (initialRooms) => {
                 setRooms(initialRooms);
             });
+
             socket.on('create room', (newRoom) => {
                 setRooms(prevRooms => [...prevRooms, newRoom]);
                 socket.emit('fetch_rooms');
             });
-            return () => {
-                socket.off('initial_rooms');
-                socket.off('create_room');
-            };
-        }
-    }, [socket]);
 
-    useEffect(() => {
-        if (socket) {
+            socket.on('update room', (updatedRoom) => {
+                setRooms(prevRooms => {
+                    const updatedRooms = prevRooms.map(room => room.roomId === updatedRoom.roomId ? updatedRoom : room);
+                    return updatedRooms;
+                });
+            });
+
             socket.on('delete room', (deletedRoomId) => {
-                console.log('delete room')
                 setRooms(prevRooms => prevRooms.filter(room => room.roomId !== deletedRoomId));
             });
 
             return () => {
+                socket.off('initial_rooms');
+                socket.off('create_room');
+                socket.off('update room');
                 socket.off('delete room');
             };
         }
     }, [socket]);
+
 
     const handleDelete = (room) => {
         socket.emit('delete room',room.roomId);
@@ -56,7 +60,7 @@ const RoomsList = () => {
                     ))}
                 </div>
             ) : (
-                <p>Vous devez être connecté pour afficher les serveurs</p> 
+                <p>Vous devez être connecté pour afficher les serveurs</p>
             )}
         </section>
     );

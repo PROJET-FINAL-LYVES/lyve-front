@@ -22,9 +22,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState("");
 
     const instance = axios.create({ baseURL: 'http://localhost:3001' })
-
     const auth = useAuth();
-
 
     const handleSubmit = (event) => {
         event.preventDefault();

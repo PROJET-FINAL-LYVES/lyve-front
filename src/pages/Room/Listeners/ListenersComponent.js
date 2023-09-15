@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { Popover } from '@headlessui/react';
 
-const Listeners = ({ socket, roomId, isHost }) => {
+const Listeners = ({ socket, roomId, isHost, currentUserId}) => {
     const [users, setUsers] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
 
+    const handleChangeHost = (newHostId) => {
+        console.log('new host id', newHostId);
+        socket.emit('change host', newHostId, roomId);
+        setSelectedUser(null); 
+    };
 
+    
     useEffect(() => {
         if (socket) {
             socket.on('room users', (usernames) => {
                 setUsers(usernames);
             });
-
-            socket.emit('get users', roomId);
 
             return () => {
                 socket.off('room users');
@@ -19,11 +25,15 @@ const Listeners = ({ socket, roomId, isHost }) => {
     }, [roomId, socket]);
 
     const getRandomColor = () => {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
+            const min = 180; 
+            const max = 256; 
+
+            const r = Math.floor(Math.random() * (max - min) + min).toString(16);
+            const g = Math.floor(Math.random() * (max - min) + min).toString(16);
+            const b = Math.floor(Math.random() * (max - min) + min).toString(16);
+
+            const color = `#${r}${g}${b}`;
+
         return color;
     };
     return (
@@ -33,7 +43,20 @@ const Listeners = ({ socket, roomId, isHost }) => {
             </div>
             {Array.isArray(users) ? (
                 users.map((user, index) => (
-                    <div className='text-sm' key={index} style={{ color: getRandomColor() }}>{user.username}</div>
+                    <div key={index} className='text-md' style={{ color: getRandomColor() }}>
+                        {isHost ? (
+                            <Popover className="relative inline-block text-left">
+                                    <Popover.Button >
+                                    {user.username}
+                                </Popover.Button>
+                                <Popover.Panel className="absolute z-10 mt-2 w-fit break- p-2 border bg-darkgray border-gray-300 rounded shadow-lg">
+                                    <button onClick={() => handleChangeHost(user.id)}>Hote</button>
+                                </Popover.Panel>
+                            </Popover>
+                        ) : (
+                            <span className='text-md'>{user.username}</span>
+                        )}
+                    </div>
                 ))
             ) : (
                 <p>No users found</p>
