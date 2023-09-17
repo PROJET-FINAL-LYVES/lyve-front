@@ -50,14 +50,20 @@ const RoomsList = () => {
             <h2 className='font-bold text-2xl mb-12'>Rejoignez un serveur</h2>
             {currentUser ? (
                 <div className='w-100 grid grid-cols-3 gap-16'>
-                    {rooms.map((room, index) => (
-                        <RoomsListItem
-                            key={index}
-                            name={room.name}
-                            room={room}
-                            onDelete={handleDelete}
-                        />
-                    ))}
+                    {rooms.length > 0 ? (
+                        rooms.map((room, index) => (
+                            <RoomsListItem
+                                key={index}
+                                name={room.name}
+                                room={room}
+                                onDelete={handleDelete}
+                            />
+                        ))
+                    ) : (
+                        <div className="col-span-3">
+                            <p>Aucune room n'est actuellement en ligne, créez la vôtre dès maintenant !</p>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <p>Vous devez être connecté pour afficher les serveurs</p>

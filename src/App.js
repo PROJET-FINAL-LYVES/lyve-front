@@ -17,6 +17,7 @@ import ServerComponent from './pages/Room';
 import LandingComponent from './pages/Landing';
 import MyAccountComponent from './pages/MyAccount';
 import ProtectedRoutes from './routes/ProtectedRoutes';
+import PricingPage from './pages/Pricing/PricingPage';
 import Loader from './components/Loader/Loader';
 import socket from './socket';
 
@@ -53,6 +54,8 @@ const App = () => {
           <Route element={<ProtectedRoutes isAllowed={currentUser && currentUser.role === 'admin'} />}>
             <Route path="/admin" element={<AdminComponent />} />
           </Route>
+          <Route path="/pricing" element={<PricingPage />} />
+
           <Route path="/login" element={<LoginComponent />} />
           <Route path="/signup" element={<SignupComponent />} />
           <Route path="/forgot" element={<ForgotPasswordComponent />} />

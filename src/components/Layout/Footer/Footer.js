@@ -1,51 +1,51 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
+import Logo from '../../Logo/Logo'
+import { useContext } from 'react'
+import {AuthContext} from '../../../context/AuthProvider'
 
 const Footer = () => {
+    const { currentUser, login, logout, socket } = useContext(AuthContext);
     return (
-        <footer className="bg-[#191919] bg-opacity-50  text-white w-200 flex p-12">
-            <section className='w-1/2 flex'>
-                <div className='column w-1/3 '>
-                    <p className='text-gold text-xl mb-4'>
+        <footer className="bg-[#191919] bg-opacity-50  text-white w-200 flex p-6">
+            <section className='w-1/2 flex gap-4'>
+                <div className='column w-1/3  flex flex-col gap-2'>
+                    <p className='text-gold text-md mb-4'>
                         Contactez-nous
                     </p>
-                    <p>
-                        item 1
+                    <p className='text-lightgray'>
+                        lyvemusic@lyve.com
                     </p>
-                    <p>
-                        item 2
+                    <p className='text-lightgray'>
+                        +33 656 56 56 56
                     </p>
-                    <p>
-                        item 3
+                    <p className='text-lightgray'>
+                        Rue Raoul Servant, 69007 Lyon
                     </p>
                 </div>
-                <div className='column w-1/3 '>
-                    <p className='text-gold text-xl mb-4'>
+                <div className='column w-1/3 column w-1/3  flex flex-col gap-2 '>
+                    <p className='text-gold text-md mb-4 '>
                         Menu
                     </p>
-                    <p>
-                        item 1
-                    </p>
-                    <p>
-                        item 2
-                    </p>
-                    <p>
-                        item 3
-                    </p>
-                </div>
-                <div className='column w-1/3 '>
-                    <p className='text-gold text-xl mb-4'>
-                        Liens utiles
-                    </p>
-                    <p>
-                        item 1
-                    </p>
-                    <p>
-                        item 2
-                    </p>
-                    <p>
-                        item 3
-                    </p>
+                    <Link to="/pricing" className="text-lightgray hover:text-gold transition-all">
+                        Tarifs
+                    </Link>
+                    {currentUser ? (
+                        <>
+                            <Link to='/admin' className="text-lightgray hover:text-gold transition-all">Administration</Link>
+                            <Link to='/myaccount' className="text-lightgray hover:text-gold transition-all">Mon Compte</Link>
+
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="text-lightgray hover:text-gold transition-all">
+                                Connexion
+                            </Link>
+                            <Link to="/signup" className="text-lightgray hover:text-gold transition-all">
+                                Inscription
+                            </Link>
+                        </>
+                    )}
                 </div>
             </section>
         </footer>

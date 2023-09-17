@@ -79,20 +79,26 @@ const Navbar = () => {
           <Logo />
         </div>
 
-        <div className="header-right flex gap-4">
+        <div className="header-right flex gap-4 align-center">
+          <Link to="/pricing" className="text-white hover:text-gold transition-all h-fit">
+            Tarifs
+          </Link>
           {currentUser ? (
             <>
+              {/* <Link to='/admin' className="text-white hover:text-gold transition-all">Administration</Link> */}
+              <Link to='/myaccount' className="text-white hover:text-gold transition-all h-fit">Mon Compte</Link>
+           
               <button
                 onClick={() => setShowModal(true)}
-                className="text-white hover:text-gold transition-all"
+                className="bg-gold hover:bg-lightgray hover:text-white transition text-black font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline"
               >
                 Créer une room
               </button>
-              <Link to='/admin' className="text-white hover:text-gold transition-all">Administration</Link>
-              <Link to='/myaccount' className="text-white hover:text-gold transition-all">Mon Compte</Link>
             </>
           ) : (
             <>
+          
+         
               <Link to="/login" className="text-white hover:text-gold transition-all">
                 Connexion
               </Link>
