@@ -6,6 +6,8 @@ import * as serviceWorkerRegistration from './utils/serviceworker/serviceWorkerR
 import reportWebVitals from './utils/serviceworker/reportWebVitals';
 import { AuthProvider } from "./context/AuthProvider";
 import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -5,7 +5,7 @@ import { useContext } from 'react'
 import {AuthContext} from '../../../context/AuthProvider'
 
 const Footer = () => {
-    const { currentUser, login, logout, socket } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
     return (
         <footer className="bg-[#191919] bg-opacity-50  text-white w-200 flex p-6">
             <section className='w-1/2 flex gap-4'>
@@ -23,7 +23,7 @@ const Footer = () => {
                         Rue Raoul Servant, 69007 Lyon
                     </p>
                 </div>
-                <div className='column w-1/3 column w-1/3  flex flex-col gap-2 '>
+                <div className='column w-1/3  flex flex-col gap-2 '>
                     <p className='text-gold text-md mb-4 '>
                         Menu
                     </p>

@@ -7,11 +7,11 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     const playerRef = useRef();
     const [currentVideo, setCurrentVideo] = useState(url);
     const [playing, setPlaying] = useState(false);
-    const [duration, setDuration] = useState(0);
-    const [played, setPlayed] = useState(0);
+    const [setDuration] = useState(0);
+    const [setPlayed] = useState(0);
     const [volume, setVolume] = useState(50);
     const [playerReady, setPlayerReady] = useState(false);
-    const { currentUser, login, logout, socket } = useContext(AuthContext);
+    const { socket } = useContext(AuthContext);
 
 
     useEffect(() => {

@@ -14,7 +14,7 @@ const SignupForm = () => {
     const navigate = useNavigate();
 
     const { setIsLoading } = useLoading();
-    const [errors, setErrors] = useState({}); 
+    const [errors] = useState({});
 
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
@@ -25,7 +25,6 @@ const SignupForm = () => {
     const [pseudo, setPseudo] = useState("");
     const [birthday, setBirthday] = useState("");
 
-    const instance = axios.create({ baseURL: 'http://localhost:3001' })
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -48,9 +47,7 @@ const SignupForm = () => {
             setIsLoading(false);
             return;
         }
-
-        instance
-
+        axios
             .post("/register", {
                 username: pseudo,
                 mail: email,
@@ -67,7 +64,7 @@ const SignupForm = () => {
                 console.error(error);
             })
             .finally(() => {
-                setIsLoading(false); 
+                setIsLoading(false);
             });
     };
 
@@ -176,20 +173,20 @@ const SignupForm = () => {
                     </label>
                 </div>
                 <div className="mb-8 flex text-left items-center">
-                    <input 
-                        type="checkbox" 
-                        className="mr-2 leading-tight inline " 
+                    <input
+                        type="checkbox"
+                        className="mr-2 leading-tight inline "
                         onChange={(e) => setNewsletter(e.target.checked)}
                     />
                     <label className=" text-white text-left text-xs font-light  inline-block">
-                        J'accepte de recevoir des actualités et des offres.                    
+                        J'accepte de recevoir des actualités et des offres.
                     </label>
                 </div>
                 <div className="mb-8 flex text-left items-center">
-                    <input 
-                        type="checkbox" 
+                    <input
+                        type="checkbox"
                         className="mr-2 leading-tight inline "
-                        onChange={(e) => setDataSharing(e.target.checked)}    
+                        onChange={(e) => setDataSharing(e.target.checked)}
                     />
                     <label className=" text-white text-left text-xs font-light  inline-block">
                         Partagez les données sur mon inscription avec les fournisseurs de contenu à des fins de marketing. Notez que vos données peuvent être transférées vers des pays en dehors de l'Espace économique européen, comme précisé dans notre Politique de confidentialité.

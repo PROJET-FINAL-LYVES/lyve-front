@@ -5,7 +5,7 @@ import { useLoading } from '../../../context/LoadingContext';
 import { AuthContext } from '../../../context/AuthProvider';
 
 const Navbar = () => {
-  const { currentUser, login, logout, socket } = useContext(AuthContext);
+  const { currentUser, socket } = useContext(AuthContext);
   const { setIsLoading } = useLoading();
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
@@ -79,7 +79,7 @@ const Navbar = () => {
           <Logo />
         </div>
 
-        <div className="header-right flex gap-4 align-center">
+        <div className="header-right flex gap-4 items-center">
           <Link to="/pricing" className="text-white hover:text-gold transition-all h-fit">
             Tarifs
           </Link>

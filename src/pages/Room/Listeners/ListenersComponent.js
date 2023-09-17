@@ -3,7 +3,7 @@ import { Popover } from '@headlessui/react';
 
 const Listeners = ({ socket, roomId, isHost, currentUserId}) => {
     const [users, setUsers] = useState([]);
-    const [selectedUser, setSelectedUser] = useState(null);
+    const [setSelectedUser] = useState(null);
 
     const handleChangeHost = (newHostId) => {
         console.log('new host id', newHostId);
