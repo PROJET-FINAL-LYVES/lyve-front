@@ -47,7 +47,7 @@ const RoomsList = () => {
 
     return (
         <section className='servers-list max-w-screen-lg mx-auto p-4 mt-20'>
-            <h2 className='font-bold text-2xl mb-12'>Rejoignez un serveur</h2>
+            <h2 className='font-bold text-2xl mb-12'>Rejoignez une room</h2>
             {currentUser ? (
                 <div className='w-100 grid grid-cols-3 gap-16'>
                     {rooms.length > 0 ? (

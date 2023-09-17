@@ -13,13 +13,14 @@ import LoginComponent from './pages/Login';
 import SignupComponent from './pages/Signup';
 import AdminComponent from './pages/Admin';
 import ForgotPasswordComponent from './pages/ForgotPassword';
-import ServerComponent from './pages/Room';
+import RoomComponent from './pages/Room';
 import LandingComponent from './pages/Landing';
 import MyAccountComponent from './pages/MyAccount';
 import ProtectedRoutes from './routes/ProtectedRoutes';
 import PricingPage from './pages/Pricing/PricingPage';
 import Loader from './components/Loader/Loader';
 import socket from './socket';
+import Room from './pages/Room';
 
 const App = () => {
   const { currentUser } = useAuth();
@@ -50,7 +51,7 @@ const App = () => {
           <Route element={<ProtectedRoutes isAllowed={currentUser} />}>
             <Route path="/myaccount" element={<MyAccountComponent />} />
           </Route>
-          <Route path="/server/:id" element={<ServerComponent />} />
+          <Route path="/room/:id" element={<RoomComponent/>} />
           <Route element={<ProtectedRoutes isAllowed={currentUser && currentUser.role === 'admin'} />}>
             <Route path="/admin" element={<AdminComponent />} />
           </Route>

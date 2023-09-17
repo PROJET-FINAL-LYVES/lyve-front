@@ -22,7 +22,7 @@ const RoomsListItem = ({
         />
       </div>
       <div className="server-bottom w-full p-4 text-left">
-        <Link to={`/server/${room.roomId}`}>
+        <Link to={`/room/${room.roomId}`}>
           <h3 className="font-bold text-xl mb-2">{name}</h3>
         </Link>
         <p className="text-xs text-gray-200 mb-4">{description}</p>
@@ -33,7 +33,8 @@ const RoomsListItem = ({
           <strong>Nombre d'utilisateurs :</strong> {numberOfUsers}
         </p>
         <p className="text-sm text-white mb-4">
-          <strong>Créateur : </strong>{room.hostName}
+          <strong>Créateur : </strong>
+          {room.hostName}
         </p>
         <p className="text-sm text-white mb-4">
           <strong>Type de musique :</strong> {room.musicType}
@@ -42,17 +43,17 @@ const RoomsListItem = ({
           <strong>Date de création :</strong>{" "}
           {new Date(room.creationDate).toLocaleString()}
         </p>
-        <button
-          className="bg-red-500 text-xs text-white rounded mt-4 p-2"
-          onClick={() => onDelete(room)}>
-          Supprimer
-        </button>
+        {currentUser.username === room.hostName && (
+          <button
+            className="bg-red-500 text-xs text-white rounded mt-4 p-2"
+            onClick={() => onDelete(room)}>
+            Supprimer
+          </button>
+        )}
       </div>
     </div>
   );
 };
-
-
 
 RoomsListItem.propTypes = {
   //   name: PropTypes.string. isRequired,
