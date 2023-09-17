@@ -13,10 +13,10 @@ const Room = () => {
     const [videoUrl, setVideoUrl] = useState('');
     const [currentVideo, setCurrentVideo] = useState('');
     const [playlist, setPlaylist] = useState([]);
-    const { currentUser, login, logout, socket } = useContext(AuthContext);
+    const { currentUser, socket } = useContext(AuthContext);
     const [errorMsg, setErrorMsg] = useState(null);
     const [showErrorModal, setShowErrorModal] = useState(false);
-    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [setShowLoginModal] = useState(false);
 
 
     const location = useLocation();

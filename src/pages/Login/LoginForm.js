@@ -1,9 +1,9 @@
+
 import { React, useState } from "react";
 import Logo from "../../components/Logo/Logo";
 import SocialButtons from "../../components/Buttons/SocialButtons";
 import Separator from "../../components/Separator/Separator";
 import SimpleButton from "../../components/Buttons/SimpleButton";
-
 
 import { Link } from "react-router-dom";
 
@@ -21,13 +21,11 @@ const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const instance = axios.create({ baseURL: 'http://localhost:3001' })
     const auth = useAuth();
-
     const handleSubmit = (event) => {
         event.preventDefault();
         setIsLoading(true);
-        instance
+        axios
             .post("/login", { mail: email, password: password })
 
            .then((response) => {

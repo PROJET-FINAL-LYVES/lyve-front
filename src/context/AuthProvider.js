@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
         if (storedUser && storedToken) {
             setCurrentUser(JSON.parse(storedUser));
 
-            const newSocket = io("http://127.0.0.1:3001", {
+            const newSocket = io(process.env.REACT_APP_SERVER_URL, {
                 auth: {
                     token: storedToken
                 }
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
         Cookies.set("user", JSON.stringify(user));
         Cookies.set("token", token);
 
-        const newSocket = io("http://127.0.0.1:3001", {
+        const newSocket = io(process.env.REACT_APP_SERVER_URL, {
             auth: {
                 token
             }
