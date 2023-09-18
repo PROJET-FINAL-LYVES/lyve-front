@@ -42,7 +42,7 @@ const App = () => {
       navigate('/');
     }
   }, [currentUser, navigate]);
-  
+
   return (
     <LoadingProvider>
       <Layout>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import Chatbox from './Chatbox/ChatboxComponent';
 import Player from './Player/PlayerComponent';
 import Playlist from './Playlist/PlaylistComponent';
+import LoginModal from '../../components/Modals/LoginModal';
 import Listeners from './Listeners/ListenersComponent';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
@@ -16,27 +17,41 @@ const Room = () => {
     const { currentUser, socket } = useContext(AuthContext);
     const [errorMsg, setErrorMsg] = useState(null);
     const [showErrorModal, setShowErrorModal] = useState(false);
-    const [setShowLoginModal] = useState(false);
-
-
-    const location = useLocation();
-
-    const navigate = useNavigate();
-
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    
     useEffect(() => {
         if (!currentUser) {
-            setShowLoginModal(true);
-            navigate('/login');
+            const timer = setTimeout(() => {
+                setShowLoginModal(true);
+            }, 1000); 
 
+            return () => clearTimeout(timer); 
         }
-    }, [currentUser]);
+    }, [currentUser, socket]);
+
+
 
     useEffect(() => {
-        return () => {
-            if (!socket) return;
-            socket.emit('leave room v2', roomId);
+        // Function to run when the user leaves the page
+        const handleBeforeUnload = (e) => {
+            if (socket) {
+                socket.emit('leave room v2', roomId);
+            }
         };
-    }, [location.pathname, roomId]);
+
+        // Attach the event listener
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            // Clean up the event listener when the component unmounts
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+
+            // Your existing code for leaving the room when the component unmounts
+            if (socket) {
+                socket.emit('leave room v2', roomId);
+            }
+        };
+    }, [socket, roomId]);
 
     const handleClearPlaylist = () => {
         socket.emit('clear playlist', roomId);
@@ -111,14 +126,29 @@ const Room = () => {
 
     useEffect(() => {
         if (socket) {
+            socket.on('kicked from room', (roomId) => {
+                setErrorMsg("Vous avez été exclu de la room.");
+                setShowErrorModal(true);
+            });
+
+            return () => {
+                socket.off('kicked from room');
+            };
+        }
+    }, [socket]);
+
+
+    useEffect(() => {
+        if (socket) {
             socket.on('connect', () => {
-                console.log(`Connected with id: ${socket.id}`);
+                console.log(`Connecté aux serveurs de Lyve ! : ${socket.id}`);
             });
         }
     }, []);
 
     return (
         <div className='room flex'>
+            {showLoginModal && <LoginModal onClose={closeModal} />}
             {showErrorModal && <ErrorModal message={errorMsg} onClose={closeModal} />}
             <div className='basis-1/5 flex-shrink min-w-[25%] '>
                 <Chatbox roomId={roomId} isHost={isHost} />

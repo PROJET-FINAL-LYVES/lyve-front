@@ -7,7 +7,7 @@ import {AuthContext} from '../../../context/AuthProvider'
 const Footer = () => {
     const { currentUser } = useContext(AuthContext);
     return (
-        <footer className="bg-[#191919] bg-opacity-50  text-white w-200 flex p-6">
+        <footer className="bg-[#191919] bg-opacity-50  text-white w-200 flex p-6 mt-6">
             <section className='w-1/2 flex gap-4'>
                 <div className='column w-1/3  flex flex-col gap-2'>
                     <p className='text-gold text-md mb-4'>

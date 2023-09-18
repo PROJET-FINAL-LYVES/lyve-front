@@ -14,7 +14,7 @@ const SignupForm = () => {
     const navigate = useNavigate();
 
     const { setIsLoading } = useLoading();
-    const [errors] = useState({});
+    const [errors, setErrors] = useState({});
 
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
@@ -25,28 +25,22 @@ const SignupForm = () => {
     const [pseudo, setPseudo] = useState("");
     const [birthday, setBirthday] = useState("");
 
+    const validateForm = () => {
+        let formErrors = {};
+        if (!email) formErrors.email = "L'email est requis.";
+        if (!password) formErrors.password = "Le mot de passe est requis.";
+        if (email !== emailConfirm) formErrors.emailConfirm = "Les emails ne correspondent pas.";
+        if (password !== passwordConfirm) formErrors.passwordConfirm = "Les mots de passe ne correspondent pas.";
+        if (!email || !emailConfirm || !password || !passwordConfirm || !pseudo || !birthday) formErrors.all = "Tous les champs sont obligatoires.";
+        setErrors(formErrors);
+        return Object.keys(formErrors).length === 0;
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setIsLoading(true);
 
-        if (!email || !emailConfirm || !password || !passwordConfirm || !pseudo || !birthday) {
-            console.error("Tous les champs sont obligatoires.");
-            setIsLoading(false);
-            return;
-        }
-
-        if (email !== emailConfirm) {
-            console.error("Les adresses e-mail ne correspondent pas.");
-            setIsLoading(false);
-            return;
-        }
-
-        if (password !== passwordConfirm) {
-            console.error("Les mots de passe ne correspondent pas.");
-            setIsLoading(false);
-            return;
-        }
+        if (validateForm()) {
         axios
             .post("/register", {
                 username: pseudo,
@@ -66,6 +60,7 @@ const SignupForm = () => {
             .finally(() => {
                 setIsLoading(false);
             });
+        }
     };
 
     return (
@@ -75,10 +70,9 @@ const SignupForm = () => {
             <h2 className="text-white text-2xl font-bold mb-12">
                 Inscrivez-vous dès maintenant et vivez une expérience musicale inoubliable.
             </h2>
-            <SocialButtons />
+            {/* <SocialButtons /> */}
             <Separator />
             <h2 className="text-white font-bold mb-5">
-                Ou inscrivez-vous avec votre adresse e-mail
             </h2>
             <form
                 className=" px-8 pt-6 pb-8 mb-4 text-white"
@@ -86,7 +80,7 @@ const SignupForm = () => {
             >
                 <div className="mb-8">
                     <label className="block text-left text-white text-xs font-bold mb-3" htmlFor="email" >
-                        Quelle est votre adresse email ?
+                        Quelle est votre adresse email ? * 
                     </label>
                     <input
                         className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -100,7 +94,7 @@ const SignupForm = () => {
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="email-confirm" >
-                        Confirmez votre adresse email
+                        Confirmez votre adresse email *
                     </label>
                     <input
                         className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -114,7 +108,7 @@ const SignupForm = () => {
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="password" >
-                        Quel est votre mot de passe ?
+                        Mot de passe *
                     </label>
                     <input
                         className="bg-black p-4 border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -128,7 +122,7 @@ const SignupForm = () => {
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="password-confirm" >
-                        Confirmez votre mot de passe
+                        Confirmez votre mot de passe *
                     </label>
                     <input
                         className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -142,7 +136,7 @@ const SignupForm = () => {
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="pseudo" >
-                        Comment doit-on vous appeler ?
+                        Choisissez un pseudo *
                     </label>
                     <input
                         className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -155,7 +149,7 @@ const SignupForm = () => {
 
                 <div className="mb-8">
                     <label className="block text-white text-left text-xs font-bold mb-3" htmlFor="birthday" >
-                        Quelle est votre date de naissance ?
+                        Quelle est votre date de naissance ? *
                     </label>
                     <input
                         className="bg-black border-white border rounded-0 text-lightgray font-bold text-sm rounded w-full py-2 px-3  mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -166,12 +160,12 @@ const SignupForm = () => {
                     />
                 </div>
 
-                <div className="mb-8 flex text-left items-center">
+                {/* <div className="mb-8 flex text-left items-center">
                     <input type="checkbox" className="mr-2 leading-tight inline " />
                     <label className=" text-white text-left text-xs font-light  inline-block">
                         Devenir artiste sur Lyve
                     </label>
-                </div>
+                </div> */}
                 <div className="mb-8 flex text-left items-center">
                     <input
                         type="checkbox"
@@ -198,8 +192,11 @@ const SignupForm = () => {
                 <p className="mb-8 flex text-xs text-center items-center">
                     Pour en savoir plus sur la façon dont Lyve recueille, utilise, partage et protège vos données personnelles, veuillez consulter la Politique de confidentialité de Lyve.
                 </p>
-                {errors.email && <p>{errors.email}</p>}
-                {errors.pseudo && <p>{errors.pseudo}</p>}
+                {errors.email && <p className="text-red-500">{errors.email}</p>}
+                {errors.password && <p className="text-red-500">{errors.password}</p>}
+                {errors.emailConfirm && <p className="text-red-500">{errors.emailConfirm}</p>}
+                {errors.passwordConfirm && <p className="text-red-500">{errors.passwordConfirm}</p>}
+                {errors.all && <p className="text-red-500">{errors.all}</p>}
                 <div className="flex items-center justify-center">
                     <SimpleButton
                         label="S'inscrire"

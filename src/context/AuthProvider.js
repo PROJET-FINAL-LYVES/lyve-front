@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
             });
 
             newSocket.on("connect", () => {
-                console.log("Socket connected successfully!");
+                console.log("Connecté aux serveurs de Lyve !");
             });
 
             setSocket(newSocket);
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         newSocket.on("connect", () => {
-            console.log("Socket connected successfully!");
+            console.log("Connecté aux serveurs de Lyve !");
         });
 
         setSocket(newSocket);
