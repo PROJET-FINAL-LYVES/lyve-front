@@ -3,7 +3,7 @@ import './separator.css'
 
 const Separator = () => {
     return (
-        <div className="separator text-gray-500 font-title text-xxs my-6">OU</div>
+        <div className="separator text-gray-500 font-title text-xxs my-6"></div>
     )
 }
 

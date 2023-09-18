@@ -51,19 +51,26 @@ const RoomsList = () => {
             {currentUser ? (
                 <div className='w-100 grid grid-cols-3 gap-16'>
                     {rooms.length > 0 ? (
-                        rooms.map((room, index) => (
-                            <RoomsListItem
-                                key={index}
-                                name={room.name}
-                                room={room}
-                                onDelete={handleDelete}
-                            />
-                        ))
+                        rooms
+                            .filter(room => {
+                                if (room.type !== 'private') return true;
+
+                                return room.hostId === currentUser._id;
+                            })
+                            .map((room, index) => (
+                                <RoomsListItem
+                                    key={index}
+                                    name={room.name}
+                                    room={room}
+                                    onDelete={handleDelete}
+                                />
+                            ))
                     ) : (
                         <div className="col-span-3">
                             <p>Aucune room n'est actuellement en ligne, créez la vôtre dès maintenant !</p>
                         </div>
                     )}
+
                 </div>
             ) : (
                 <p>Vous devez être connecté pour afficher les serveurs</p>

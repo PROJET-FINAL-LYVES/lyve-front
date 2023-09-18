@@ -3,17 +3,17 @@ import React from 'react';
 function Playlist({ playlist, isHost, videoUrl, handleVideoUrlChange, handleVideoSubmit, handleClearPlaylist, handleRemoveSong, currentUser }) {
     return (
         <div>
-            <span className='font-bold text-2xl text-gold'>A suivre</span>
-            <div className='following-wrapper flex overflow-x-auto gap-4 w-5/6'>
+            <span className='font-bold text-2xl text-gold block mb-4 '>A suivre</span>
+            <div className='following-wrapper flex overflow-x-scroll gap-4 mb-4 p-3'>
                 {
                     playlist.map((song, index) => (
-                        <span key={index} className='following rounded-2xl w-24 h-content bg-custom-gray break-all p-4'>
+                        <span key={index} className='following rounded-2xl h-content bg-custom-gray break-all p-4 min-w-[10rem] w-40'>
                             <div className='text-xs'>
                                 {song.name} <br />
-                                <span className='text-gold'>
+                                <span className='text-gold mb-2 mt-2 block'>
                                     {song.duration.hours}h {song.duration.minutes}m {song.duration.seconds}s <br />
                                 </span>
-                                <span className='text-gray-500'>
+                                <span className='text-gray-500 mb-2'>
                                     {song.username}
                                 </span>
                             </div>

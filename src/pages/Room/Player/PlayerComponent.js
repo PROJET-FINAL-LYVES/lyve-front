@@ -7,8 +7,8 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
     const playerRef = useRef();
     const [currentVideo, setCurrentVideo] = useState(url);
     const [playing, setPlaying] = useState(false);
-    const [setDuration] = useState(0);
-    const [setPlayed] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [played, setPlayed] = useState(0);
     const [volume, setVolume] = useState(50);
     const [playerReady, setPlayerReady] = useState(false);
     const { socket } = useContext(AuthContext);
@@ -26,7 +26,6 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
                     playerRef.current.seekTo(time, 'seconds');
                     playerRef.current.getInternalPlayer().pauseVideo();
                 }
-            } else {
             }
         };
 
@@ -76,20 +75,21 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
         if (!socket) return;
         const handleEditClientPlayerState = (currentTime, playerState) => {
             const updatedCurrentTime = currentTime + 1.5;
-
-            if (playerState === 'playing') {
-                playerRef.current.seekTo(updatedCurrentTime, 'seconds');
-                setPlaying(true);
-                setTimeout(() => {
+            setTimeout(() => {
+                if (playerState === 'playing') {
                     playerRef.current.seekTo(updatedCurrentTime, 'seconds');
-                }, 100);
-            } else if (playerState === 'paused') {
-                setPlaying(true);
-                setTimeout(() => {
-                    playerRef.current.seekTo(currentTime, 'seconds');
-                    setPlaying(false);
-                }, 2000);
-            }
+                    setPlaying(true);
+                    setTimeout(() => {
+                        playerRef.current.seekTo(updatedCurrentTime, 'seconds');
+                    }, 100);
+                } else if (playerState === 'paused') {
+                    setPlaying(true);
+                    setTimeout(() => {
+                        playerRef.current.seekTo(currentTime, 'seconds');
+                        setPlaying(false);
+                    }, 1500);
+                }
+            }, 1000);
         };
 
         socket.on('edit client player state', handleEditClientPlayerState);
@@ -97,7 +97,8 @@ function Player({ roomId, isHost, url, onSkipVideo }) {
         return () => {
             socket.off('edit client player state', handleEditClientPlayerState);
         };
-    }, [playerReady]);
+    }, [playerReady, socket]);
+
 
     useEffect(() => {
         if (!socket) return;

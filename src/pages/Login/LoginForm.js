@@ -22,31 +22,50 @@ const LoginForm = () => {
     const [password, setPassword] = useState("");
 
     const auth = useAuth();
+
+    const [errors, setErrors] = useState({});
+
+    const validateForm = () => {
+        let formErrors = {};
+        if (!email) formErrors.email = "L'email est requis.";
+        if (!password) formErrors.password = "Le mot de passe est requis.";
+        setErrors(formErrors);
+        return Object.keys(formErrors).length === 0;
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         setIsLoading(true);
-        axios
-            .post("/login", { mail: email, password: password })
-
-           .then((response) => {
-            console.log("Full response:", response);
-            console.log("Response data:", response.data);
-            if (response.data && response.data.user && response.data.user.token) {
-                auth.login(response.data.user, response.data.user.token);
-            }
-        })
-            .catch((error) => {
-                if (error.response && error.response.data) {
-                    setErrorMessage(error.response.data.message.join(' '));
-                } else {
-                    setErrorMessage("An unknown error occurred.");
-                }
-                console.error(error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+        if (validateForm()) {
+            axios
+                .post("/login", { mail: email, password: password })
+                .then((response) => {
+                    if (response.data.success && response.data.user && response.data.user.token) {
+                        auth.login(response.data.user, response.data.user.token);
+                    } else {
+                        setErrorMessage(response.data.message);
+                        if (response.data.message === "Mail is not linked to an account") {
+                            setErrors({ email: "L'adresse e-mail ou le mot de passe est incorrect" });
+                        } else if (response.data.message === "Invalid password") {
+                            setErrors({ password: "Mot de passe invalide." });
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    if (error.response && error.response.data) {
+                        setErrorMessage(error.response.data.message);
+                    } else {
+                        setErrorMessage("Une erreur inconnue s'est produite.");
+                    }
+                    console.error(error);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        }
     };
+
 
     return (
 
@@ -58,7 +77,7 @@ const LoginForm = () => {
             <h2 className="text-white text-2xl font-bold mb-12">
                 Pour continuer, connectez-vous à Lyve.
             </h2>
-            <SocialButtons />
+            {/* <SocialButtons /> */}
             <Separator />
             <form
                 className="px-8 pt-6 pb-8 mb-4 text-white"
@@ -69,7 +88,7 @@ const LoginForm = () => {
                         className="block text-left text-white text-xs font-bold mb-3"
                         htmlFor="email"
                     >
-                        Adresse email ou nom d'utilisateur
+                        Adresse email
                     </label>
                     <input
                         className="bg-black border-white border text-lightgray font-bold text-sm rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -96,8 +115,10 @@ const LoginForm = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    {errors.email && <p className="text-red-500">{errors.email}</p>}
+                    {errors.password && <p className="text-red-500">{errors.password}</p>}
+
                 </div>
-                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                 <div className="flex items-center justify-center">
                     <SimpleButton
                         label="Se connecter"

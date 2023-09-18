@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Popover } from '@headlessui/react';
 
-const Listeners = ({ socket, roomId, isHost, currentUserId}) => {
+const Listeners = ({ socket, roomId, isHost }) => {
     const [users, setUsers] = useState([]);
-    const [setSelectedUser] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
+
+    const handleKickUser = (userIdToKick) => {
+        socket.emit('kick user', userIdToKick, roomId);
+        setSelectedUser(null);
+    };
 
     const handleChangeHost = (newHostId) => {
-        console.log('new host id', newHostId);
         socket.emit('change host', newHostId, roomId);
         setSelectedUser(null); 
     };
@@ -46,11 +50,12 @@ const Listeners = ({ socket, roomId, isHost, currentUserId}) => {
                     <div key={index} className='text-md' style={{ color: getRandomColor() }}>
                         {isHost ? (
                             <Popover className="relative inline-block text-left">
-                                    <Popover.Button >
+                                <Popover.Button>
                                     {user.username}
                                 </Popover.Button>
                                 <Popover.Panel className="absolute z-10 mt-2 w-fit break- p-2 border bg-darkgray border-gray-300 rounded shadow-lg">
-                                    <button onClick={() => handleChangeHost(user.id)}>Hote</button>
+                                    <button onClick={() => handleChangeHost(user.id)}>Hôte</button>
+                                    <button onClick={() => handleKickUser(user.id)}>Exclure</button>
                                 </Popover.Panel>
                             </Popover>
                         ) : (

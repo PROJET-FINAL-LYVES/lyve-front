@@ -12,16 +12,17 @@ const RoomsListItem = ({
 }) => {
   const { currentUser } = useContext(AuthContext);
   const numberOfUsers = room.userList ? room.userList.length : 0;
+  const isPrivate = room.type === "private" ? 'text-gold' : " ";
   return (
-    <div className="rounded-2xl bg-custom-gray overflow-hidden">
-      <div className="server-top w-full h-48 rounded-b-2xl relative bg-gray-300">
+    <div className="rounded-2xl bg-custom-gray overflow-hidden border-gold border-2">
+      {/* <div className="server-top w-full h-48 rounded-b-2xl relative bg-gray-300">
         <div
           className="server-image w-5/6 h-32 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-cover bg-center rounded-2xl"
           style={{ backgroundImage: `url(${imageUrl})` }}
         />
-      </div>
+      </div> */}
       <div className="server-bottom w-full p-4 text-left">
-        <Link to={`/room/${room.roomId}`}>
+        <Link className={isPrivate} to={`/room/${room.roomId}`}>
           <h3 className="font-bold text-xl mb-2">{name}</h3>
         </Link>
         <p className="text-xs text-gray-200 mb-4">{description}</p>
