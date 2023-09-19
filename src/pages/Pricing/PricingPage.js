@@ -1,11 +1,11 @@
-import Logo from '../../components/Logo/Logo';
+import LogoWhite from '../../components/Logo/LogoWhite';
 import React from 'react';
 
 const PricingPage = () => {
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="mb-10 text-center">
-                <Logo />
+        <div className="flex flex-col items-center justify-center px-16">
+            <div className="mb-10 mt-10 text-center">
+                <LogoWhite class="w-40 mx-auto mb-4"/>
                 <h1 className="text-white text-2xl font-bold">Choisissez un abonnement et débloquez les fonctionnalités exclusives</h1>
             </div>
 
@@ -20,7 +20,7 @@ const PricingPage = () => {
                         <li>Augmentation de la taille des rooms</li>
 
                     </ul>
-                    <button className="bg-gold hover:bg-darkgray hover:text-white transition text-black font-bold  w-fit mx-auto py-2 px-6 rounded-full focus:outline-none focus:shadow-outline">
+                    <button className="bg-gold pointer-events-none cursor-not-allowed hover:bg-darkgray hover:text-white transition text-black font-bold  w-fit mx-auto py-2 px-6 rounded-full focus:outline-none focus:shadow-outline">
                         S'abonner pour 8.99€/mois
                     </button>
                 </div>
@@ -33,7 +33,7 @@ const PricingPage = () => {
                         <li>Diffusion de votre musique sous forme de publicité</li>
                         <li>Support amélioré</li>
                     </ul>
-                    <button className="bg-gold hover:bg-darkgray hover:text-white transition text-black font-bold py-2 px-6 w-fit mx-auto rounded-full focus:outline-none focus:shadow-outline">
+                    <button className="bg-gold pointer-events-none cursor-not-allowed hover:bg-darkgray hover:text-white transition text-black font-bold py-2 px-6 w-fit mx-auto rounded-full focus:outline-none focus:shadow-outline">
                         S'abonner pour 16.99€/mois
                     </button>
                 </div>

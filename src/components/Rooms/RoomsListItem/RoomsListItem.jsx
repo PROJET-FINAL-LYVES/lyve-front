@@ -39,10 +39,10 @@ const RoomsListItem = ({
         <p className="text-sm text-white mb-4">
           <strong>Type de musique :</strong> {room.musicType}
         </p>
-        <p className="text-sm text-white mb-4">
+        {/* <p className="text-sm text-white mb-4">
           <strong>Date de création :</strong>{" "}
           {new Date(room.creationDate).toLocaleString()}
-        </p>
+        </p> */}
         {currentUser.username === room.hostName && (
           <button
             className="bg-red-500 text-xs text-white rounded mt-4 p-2"

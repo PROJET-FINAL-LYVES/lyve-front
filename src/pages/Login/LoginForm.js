@@ -1,6 +1,6 @@
 
 import { React, useState } from "react";
-import Logo from "../../components/Logo/Logo";
+import LogoWhite from "../../components/Logo/LogoWhite";
 import SocialButtons from "../../components/Buttons/SocialButtons";
 import Separator from "../../components/Separator/Separator";
 import SimpleButton from "../../components/Buttons/SimpleButton";
@@ -15,7 +15,7 @@ import axios from "axios";
 
 const LoginForm = () => {
 
-    const { setIsLoading } = useLoading();
+    const { isLoading, setIsLoading } = useLoading();
     const [errorMessage, setErrorMessage] = useState("");
 
     const [email, setEmail] = useState("");
@@ -73,7 +73,7 @@ const LoginForm = () => {
             <h1>
 
             </h1>
-            <Logo />
+            <LogoWhite class="w-32 mx-auto mb-4"/>
             <h2 className="text-white text-2xl font-bold mb-12">
                 Pour continuer, connectez-vous à Lyve.
             </h2>

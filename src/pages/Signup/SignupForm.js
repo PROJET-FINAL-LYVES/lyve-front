@@ -1,5 +1,5 @@
 import { React } from "react";
-import Logo from "../../components/Logo/Logo";
+import LogoWhite from "../../components/Logo/LogoWhite";
 import SocialButtons from "../../components/Buttons/SocialButtons";
 import SimpleButton from "../../components/Buttons/SimpleButton";
 import Separator from "../../components/Separator/Separator";
@@ -13,7 +13,7 @@ import axios from "axios";
 const SignupForm = () => {
     const navigate = useNavigate();
 
-    const { setIsLoading } = useLoading();
+    const { isLoading, setIsLoading } = useLoading();
     const [errors, setErrors] = useState({});
 
     const [email, setEmail] = useState("");
@@ -66,7 +66,7 @@ const SignupForm = () => {
     return (
 
         <div className="bg-black  p-7 w-auto mx-auto my-5 text-darkgray rounded-2xl">
-            <Logo />
+            <LogoWhite class="w-32 mx-auto mb-4" />
             <h2 className="text-white text-2xl font-bold mb-12">
                 Inscrivez-vous dès maintenant et vivez une expérience musicale inoubliable.
             </h2>
