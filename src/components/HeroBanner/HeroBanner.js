@@ -1,5 +1,6 @@
 import React from 'react'
 import SimpleButton from "../Buttons/SimpleButton";
+import LogoWhite from '../Logo/LogoWhite'
 
 const HeroBanner = () => {
     return (
@@ -8,12 +9,11 @@ const HeroBanner = () => {
                 <img src="/assets/banner_photo.png" alt="logo" className='' />
             </div>
             <div className='hero-banner-right w-1/2 flex flex-col justify-center items-start text-left'>
-                <h2 className='text-3xl font-bold text-gold mb-4'>LYVE</h2>
-                <p className='text-6xl font-bold pr-20 mb-8'>La musique est meilleure quand on la partage</p>
+                <LogoWhite class="w-32"/>
+                <p className='text-6xl font-bold pr-20 mb-8 mt-4'>La musique est meilleure quand on la partage</p>
                 <SimpleButton
                     label="En savoir plus"
                     type="submit"
-                    
                 />
             </div>
         </div>

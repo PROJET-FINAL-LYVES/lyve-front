@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Logo from "../../Logo/Logo";
+import LogoWhite from "../../Logo/LogoWhite";
 import { Link } from "react-router-dom";
 import { useLoading } from '../../../context/LoadingContext';
 import { AuthContext } from '../../../context/AuthProvider';
@@ -57,18 +58,22 @@ const Navbar = () => {
   const handleSubmit = (event) => {
     const userId = currentUser._id
     const userName = currentUser.username
-    event.preventDefault();
-    socket.emit('create room', {
-      name,
-      userId,
-      userName,
-      type,
-      maxUsers: maxUsers,
-      musicType
-    }, (ack) => {
-      console.log('Server received the CREATE_ROOM_EVENT:', ack);
-    });
-    return false;
+    if (name === "" || type === "" || maxUsers === "" || musicType === "") {
+      alert("Remplissez tous les champs");
+    } else {
+      event.preventDefault();
+      socket.emit('create room', {
+        name,
+        userId,
+        userName,
+        type,
+        maxUsers: maxUsers,
+        musicType
+      }, (ack) => {
+        console.log('Server received the CREATE_ROOM_EVENT:', ack);
+      });
+      return false;
+    }
   };
 
 
@@ -76,7 +81,7 @@ const Navbar = () => {
     <header>
       <nav className="bg-darkestgray h-{menu} bg-opacity-50 mx-auto p-4 flex text-center items-center justify-between font-primary font-light">
         <div className="header-left">
-          <Logo />
+          <Logo class="w-40" />
         </div>
 
         <div className="header-right flex gap-4 items-center">
@@ -112,14 +117,14 @@ const Navbar = () => {
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-black p-7 w-auto mx-auto my-5 text-darkgray rounded-2xl relative">
+          <div className="bg-black p-7 w-auto mx-auto my-5 text-darkgray text-center rounded-2xl relative">
             <button
               onClick={() => setShowModal(false)}
               className="text-white absolute top-4 right-4"
             >
               X
             </button>
-            <Logo />
+            <LogoWhite class="w-24 mx-auto mb-4" />
             <h2 className="text-white text-2xl font-bold mb-12">
               Créer une room
             </h2>
